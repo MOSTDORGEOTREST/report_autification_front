@@ -38,8 +38,11 @@ export default function Home() {
       });
 
     function updateReports() {
-      fetch(`reportsCount/`)
-        .then((response) => response.json())
+      fetch(`https://georeport.ru/reports/count`)
+        .then((response) => {
+          if (response.ok && response.status === 200) return response.json();
+          return undefined
+        })
         .then((data) => {
           if (data) {
             setReports(data);
@@ -66,19 +69,19 @@ export default function Home() {
               испытаний, тем самым создавая дополнительную степень защиты.
             </p>
             <div className="reports-counter__wrapper">
-          <div className="">Аутентифицированных протоколов:</div>
-          <h1 className="" id="reportsCounter">
-            {reports ? reports : "\u221E"}
-          </h1>
-          </div>
+              <div className="">Аутентифицированных протоколов:</div>
+              <h1 className="" id="reportsCounter">
+                {reports ? reports : "\u221E"}
+              </h1>
+            </div>
 
-          <a
-          className="btn-test btn btn-success btn-lg w-100 w-lg-50 align-center"
-          href="mailto:tnick1502@mail.ru"
-          id="btn-test"
-          >
-          Протестировать
-          </a>
+            <a
+              className="btn-test btn btn-success btn-lg w-100 w-lg-50 align-center"
+              href="mailto:tnick1502@mail.ru"
+              id="btn-test"
+            >
+              Протестировать
+            </a>
           </div>
           <div className="home-img" id="homeImg">
             <img className="home-img__image" src={mainimg} alt="mainimg"></img>
@@ -90,7 +93,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>        
+        </div>
 
         <section className="index_content" id="about">
           <hr />
