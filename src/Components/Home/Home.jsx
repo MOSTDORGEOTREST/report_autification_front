@@ -228,6 +228,7 @@ export default function Home() {
           <div className="content__container container-mdgt">
             <h2 className="container__title">Кататог лицензий</h2>
           </div>
+          
           <div className="mdgt-cards__wrapper">
             <div className="mdgt-card">
               <div className="mdgt-card__title">Стандартная</div>
