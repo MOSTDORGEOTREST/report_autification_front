@@ -7,6 +7,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  margin-top: 2rem;
 }
 
 .index_content.home_info > div {

@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-      <h2 className="container__title">Проект GEOREPORT</h2>
+      {/* <h2 className="container__title">Проект GEOREPORT</h2> */}
       <div className="index_contener">
         <div className="index_content home_info" id="home">
           <div className="">
@@ -65,6 +65,20 @@ export default function Home() {
               GEOREPORT позволяет аутентифицировать протоколы лабораторных
               испытаний, тем самым создавая дополнительную степень защиты.
             </p>
+            <div className="reports-counter__wrapper">
+          <div className="">Аутентифицированных протоколов:</div>
+          <h1 className="" id="reportsCounter">
+            {reports ? reports : "\u221E"}
+          </h1>
+          </div>
+
+          <a
+          className="btn-test btn btn-success btn-lg w-100 w-lg-50 align-center"
+          href="mailto:tnick1502@mail.ru"
+          id="btn-test"
+          >
+          Протестировать
+          </a>
           </div>
           <div className="home-img" id="homeImg">
             <img className="home-img__image" src={mainimg} alt="mainimg"></img>
@@ -76,22 +90,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="reports-counter__wrapper">
-          <div className="">Аутентифицированных протоколов:</div>
-          <h1 className="" id="reportsCounter">
-            {reports ? reports : "\u221E"}
-          </h1>
-        </div>
-
-        <a
-          className="btn-test btn btn-success btn-lg w-100 w-lg-50 align-center"
-          href="mailto:tnick1502@mail.ru"
-          id="btn-test"
-        >
-          Протестировать
-        </a>
+        </div>        
 
         <section className="index_content" id="about">
           <hr />
