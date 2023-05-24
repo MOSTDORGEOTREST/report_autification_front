@@ -228,6 +228,119 @@ export default function Home() {
           <div className="content__container container-mdgt">
             <h2 className="container__title">Кататог лицензий</h2>
           </div>
+          <div className="mdgt-cards__wrapper">
+            <div className="mdgt-card">
+              <div className="mdgt-card__title">Стандартная</div>
+              <div className="mdgt-card__content">
+                <div className="mdgt-card__price">
+                  <p>10 000 &#8381;</p>
+                  <p>в год</p>
+                </div>
+                <div className="mdgt-card__options">
+                  <ul>
+                    <li>
+                      <p className="text-start">До 1000 протоколов*</p>
+                    </li>
+                    <li>
+                      <p className="text-start">
+                        Личный кабинет{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <a className="mdgt-card__button">Приобрести</a>
+            </div>
+            <div className="mdgt-card best">
+              <div className="mdgt-card__title">Расширенная</div>
+              <div className="mdgt-card__content">
+                <div className="mdgt-card__price">
+                  <p>20 000 &#8381;</p>
+                  <p>в год</p>
+                </div>
+                <div className="mdgt-card__options">
+                  <ul>
+                    <li>
+                      <p className="text-start">До 10 000 протоколов*</p>
+                    </li>
+                    <li>
+                      <p className="text-start">
+                        Личный кабинет{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
+                      </p>
+                    </li>
+                    <li>
+                      <p className="text-start">
+                        API{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <a className="mdgt-card__button">Приобрести</a>
+            </div>
+            <div className="mdgt-card">
+              <div className="mdgt-card__title">Максимальная</div>
+              <div className="mdgt-card__content">
+                <div className="mdgt-card__price">
+                  <p>30 000 &#8381;</p>
+                  <p>в год</p>
+                </div>
+                <div className="mdgt-card__options">
+                  <ul>
+                    <li>
+                      <p className="text-start">До 100 000 протоколов*</p>
+                    </li>
+                    <li>
+                      <p className="text-start">
+                        Личный кабинет{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
+                      </p>
+                    </li>
+                    <li>
+                      <p className="text-start">
+                        API{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
+                      </p>
+                    </li>
+                    <li>
+                      <p className="text-start">
+                        Дополнительные файлы{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <a className="mdgt-card__button">Приобрести</a>
+            </div>
+          </div>
         </div>
       </div>
     </>
