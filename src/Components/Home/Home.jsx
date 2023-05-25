@@ -13,6 +13,7 @@ import qr_index from "../images/qr_index.png";
 import lock from "../images/lock.gif";
 import server from "../images/server.gif";
 import qr_transparent from "../images/qr_transparent.png";
+import IsMobile from "../../Utils/IsMobile";
 
 export default function Home() {
   const { setHomeLoaded } = useContext(Context);
@@ -50,7 +51,30 @@ export default function Home() {
         });
     }
 
+    function imageMove() {
+      const homeImgLink = document.getElementById("homeImg");
+      // const screenWidth = window.innerWidth;
+      if (IsMobile() && homeImgLink) {
+        homeImgLink.addEventListener("click", (event) => {
+          homeImgLink.classList.add("onscroll");
+        });
+      }
+
+      if (IsMobile() && homeImgLink) {
+        const sectionTop =
+          homeImgLink.offsetTop;
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > sectionTop) {
+            homeImgLink.classList.add("onscroll");
+          } else {
+            homeImgLink.classList.remove("onscroll");
+          }
+        });
+      }
+    }
+
     updateReports();
+    imageMove();
   }, []);
 
   return (
@@ -225,9 +249,7 @@ export default function Home() {
 
         <div className="index_content" id="license">
           <hr />
-          <div className="content__container container-mdgt">
-            <h2 className="container__title">Кататог лицензий</h2>
-          </div>
+
 
           <div className="mdgt-cards__wrapper">
             <div className="mdgt-card">
