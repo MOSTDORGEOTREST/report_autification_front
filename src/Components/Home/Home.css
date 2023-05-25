@@ -1,6 +1,7 @@
 /* ============== ОСНОВНОЙ БЛОК ============== */
 .index_content {
   text-align: justify;
+  width: 100%;
 }
 
 .index_content.home_info {
@@ -439,7 +440,6 @@
   height: 60px;
 }
 
-
 /* КАРТОЧКИ */
 
 :root {
@@ -448,6 +448,8 @@
 }
 
 .mdgt-cards__wrapper {
+  width: 100%;
+
   display: grid;
 
   grid-template-columns: 1fr 1fr 1fr;
@@ -461,7 +463,7 @@
   }
 }
 
-/* .mdgt-card {
+.mdgt-card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -527,14 +529,14 @@
 .mdgt-card__options li {
   border-bottom: 1px solid #ccc;
   padding: 0.25rem 0rem;
-} */
+}
 
 /* .mdgt-card.best .mdgt-card__title,
 .mdgt-card.best .mdgt-card__button {
   background-color: var(--mdgt-green);
 } */
 
-/* .mdgt-card__button:hover,
+.mdgt-card__button:hover,
 .mdgt-card.best .mdgt-card__button:hover {
   background-color: var(--green_logo_hover);
-} */
+}
