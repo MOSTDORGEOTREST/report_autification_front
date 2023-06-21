@@ -116,6 +116,16 @@ export default function Navigation() {
                     smooth
                     to="/login"
                     onClick={closeNav}
+                  >
+                    Личный кабинет
+                  </NavHashLink>
+                </li>
+                <li className="nav-item">
+                  <NavHashLink
+                    className="nav-link"
+                    smooth
+                    to="/login"
+                    onClick={closeNav}
                     scroll={(el) => scrollWithOffset(el)}
 
                   >
@@ -141,10 +151,15 @@ export default function Navigation() {
 					{% block content_title %} {% endblock %}
 				</h2> */}
         <>
-          <Routes>
+        <Routes>
             <Route
               path="/"
               element={<Home />}
+              errorElement={<div>Error!</div>}
+            />
+            <Route 
+              path="/login"
+              element={<Login />}
               errorElement={<div>Error!</div>}
             />
             {/* 404 Page */}
