@@ -120,18 +120,6 @@ export default function Navigation() {
                     Личный кабинет
                   </NavHashLink>
                 </li>
-                <li className="nav-item">
-                  <NavHashLink
-                    className="nav-link"
-                    smooth
-                    to="/login"
-                    onClick={closeNav}
-                    scroll={(el) => scrollWithOffset(el)}
-
-                  >
-                    Личный кабинет
-                  </NavHashLink>
-                </li>
               </ul>
 
               <div className="nav__close" id="nav-close" onClick={closeNav}>

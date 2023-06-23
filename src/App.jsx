@@ -12,6 +12,8 @@ function App() {
   const [homeLoaded, setHomeLoaded] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
+  const [logged, setLogged] = useState(false)
+
   useEffect(() => {
     const onPageLoad = () => {
       setLoaded(true);
@@ -37,7 +39,7 @@ function App() {
     <>
       <div className={allLoaded ? "App" : "App hidden"}>
         <>
-          <Context.Provider value={{ setHomeLoaded }}>
+          <Context.Provider value={{ setHomeLoaded, logged, setLogged }}>
             <Navigation />
             <Footer />
           </Context.Provider>
