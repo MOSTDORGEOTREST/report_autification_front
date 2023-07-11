@@ -86,7 +86,6 @@ export default function Login() {
     <>
       {!logged ? (
         <>
-          <h2 className="container__title">Личный кабинет</h2>
           <form
             ref={form}
             className="row form-row"
