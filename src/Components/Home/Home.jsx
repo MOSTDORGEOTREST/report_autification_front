@@ -111,7 +111,7 @@ export default function Home() {
             <img className="home-img__image" src={mainimg} alt="mainimg"></img>
             <div className="home-img__hover">
               <div className="home-img__link_wrapper">
-                <a href="/" className="home-img__hover_link">
+                <a href="/report" className="home-img__hover_link">
                   <img src={qr_index} width="100px" alt="qr_index" />
                 </a>
               </div>
@@ -257,19 +257,21 @@ export default function Home() {
               <div className="mdgt-card__content">
                 <div className="mdgt-card__price">
                   <p>10 000 &#8381;</p>
-                  <p></p>
+                  <p>в год</p>
                 </div>
                 <div className="mdgt-card__options">
                   <ul>
-                  <li>
-                      <p className="text-start">Лицензия на год</p>
-                    </li>
                     <li>
-                      <p className="text-start">До 1000 протоколов</p>
+                      <p className="text-start">До 1000 протоколов*</p>
                     </li>
                     <li>
                       <p className="text-start">
-                        Личный кабинет{" "}                        
+                        Личный кабинет{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
                       </p>
                     </li>
                   </ul>
@@ -282,24 +284,31 @@ export default function Home() {
               <div className="mdgt-card__content">
                 <div className="mdgt-card__price">
                   <p>20 000 &#8381;</p>
-                  <p></p>
+                  <p>в год</p>
                 </div>
                 <div className="mdgt-card__options">
                   <ul>
-                  <li>
-                      <p className="text-start">Лицензия на год</p>
-                    </li>
                     <li>
-                      <p className="text-start">До 10 000 протоколов</p>
+                      <p className="text-start">До 10 000 протоколов*</p>
                     </li>
                     <li>
                       <p className="text-start">
-                        Личный кабинет{" "}                        
+                        Личный кабинет{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
                       </p>
                     </li>
                     <li>
                       <p className="text-start">
-                        API{" "}                        
+                        API{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
                       </p>
                     </li>
                   </ul>
@@ -312,29 +321,41 @@ export default function Home() {
               <div className="mdgt-card__content">
                 <div className="mdgt-card__price">
                   <p>30 000 &#8381;</p>
-                  <p></p>
+                  <p>в год</p>
                 </div>
                 <div className="mdgt-card__options">
                   <ul>
                     <li>
-                      <p className="text-start">Лицензия на год</p>
-                    </li>
-                    <li>
-                      <p className="text-start">До 100 000 протоколов</p>
+                      <p className="text-start">До 100 000 протоколов*</p>
                     </li>
                     <li>
                       <p className="text-start">
-                        Личный кабинет{" "}                        
+                        Личный кабинет{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
                       </p>
                     </li>
                     <li>
                       <p className="text-start">
-                        API{" "}                        
+                        API{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
                       </p>
                     </li>
                     <li>
                       <p className="text-start">
-                        Дополнительные файлы{" "}                        
+                        Дополнительные файлы{" "}
+                        <img
+                          className="text-start_check"
+                          src={checkMark}
+                          alt="check mark"
+                        />
                       </p>
                     </li>
                   </ul>

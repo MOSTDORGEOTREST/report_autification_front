@@ -13,7 +13,7 @@ export default function Login() {
   const { logged, setLogged } = useContext(Context);
 
   useEffect(() => {
-    fetch("http://localhost:8555/authorization/user/", {
+    fetch("http://localhost:8555/auth/user/", {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
@@ -34,7 +34,7 @@ export default function Login() {
   }
 
   function login(username, password, gotoUrl = null) {
-    fetch("http://localhost:8555/authorization/sign-in/", {
+    fetch("http://localhost:8555/auth/sign-in/", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
       headers: {
@@ -86,6 +86,7 @@ export default function Login() {
     <>
       {!logged ? (
         <>
+          <h2 className="container__title">Личный кабинет</h2>
           <form
             ref={form}
             className="row form-row"
