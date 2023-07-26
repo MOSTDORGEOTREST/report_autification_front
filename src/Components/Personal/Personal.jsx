@@ -12,13 +12,20 @@ export default function Personal() {
   const [userData, setUserData] = useState(null);
   const [reportsCount, setReportsCount] = useState(0);
 
-  const [pageLim, setPageLim] = useState(10);
+  const [pageLim, setPageLim] = useState(9);
   const [page, setPage] = useState(0);
 
   const [objects, setObjects] = useState(null);
   const [objectsData, setObjectsData] = useState(null);
+  const [selectedObj, setSelectedObj] = useState(null);
 
+  const delReportId = useRef();
   const requestTokenDialog = useRef();
+  const delReportDialog = useRef();
+
+  const reportForm = useRef();
+  const formRows = useRef(3);
+  const maxFromRows = 10;
 
   const fetchUserData = () => {
     fetch("http://localhost:8555/auth/user/", {
@@ -101,6 +108,59 @@ export default function Personal() {
     });
   };
 
+  const setReportForDel = (reportId) => {
+    if (!reportId) return;
+
+    delReportId.current = reportId;
+    delReportDialog.current.classList.add("del-report-modal__wrapper_show");
+  };
+
+  const delReport = () => {
+    if (!delReportId.current) return;
+
+    fetch(`http://localhost:8555/reports/?id=${delReportId.current}`, {
+      method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "*/*",
+      },
+    }).then(() => {
+      delReportDialog.current.classList.remove(
+        "del-report-modal__wrapper_show"
+      );
+      fetchObjects();
+    });
+  };
+
+  function downloadData(_BLOB, _file_name) {
+    const a = document.createElement("a");
+    a.href = window.URL.createObjectURL(_BLOB);
+    a.target = "_blank";
+    a.download = _file_name;
+    a.click();
+  }
+
+  const dowloadQr = (ID, object_number, laboratory_number, test_type) => {
+    if (!ID) return;
+
+    fetch(`http://localhost:8555/reports/qr?id=${ID}`, {
+      method: "POST",
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        return response.blob();
+      })
+      .then((data) => {
+        downloadData(
+          data,
+          `${object_number} - ${laboratory_number} - ${test_type}`
+        );
+      });
+  };
+
   useEffect(() => {
     if (!logged) return;
 
@@ -111,17 +171,85 @@ export default function Personal() {
 
   useEffect(() => {
     if (!objects) return;
-    console.log("objects:", objects);
-    fetchObject(objects[0])
-      .then((data) => {
-        if (!data) return;
-        console.log("test object:", data);
-        setObjectsData(data);
+
+    let promiseArr = objects
+      .filter((obj) => {
+        if (selectedObj) return obj === selectedObj;
+        return true;
       })
-      .catch(() => {
-        return;
+      .map((obj) => {
+        return fetchObject(obj).then((data) => {
+          if (!data) return null;
+          return data;
+        });
       });
-  }, [page, objects]);
+
+    Promise.all(promiseArr).then((data) => {
+      let objectsData = data.filter((obj) => (obj ? true : false));
+      if (!objectsData) return;
+      setObjectsData(objectsData.flat(1));
+    });
+  }, [objects, selectedObj]);
+
+  const submitReport = () => {
+    console.log(reportForm.current);
+  };
+
+  const addRow = () => {
+    if (formRows.current >= maxFromRows) return;
+
+    const lastRow = document.getElementById(
+      `inputParam_${formRows.current}_val`
+    ).parentNode;
+
+    if (!lastRow) return;
+
+    formRows.current = formRows.current + 1;
+
+    const newRow = `
+      <div class="form-group col-6">
+        <input
+        type="text"
+        class="form-control"
+        id="inputParam_${formRows.current}"
+        name="inputParam_${formRows.current}"
+        placeholder=""
+        aria-describedby="validationFeedback"/>
+        <div class="invalid-feedback" id="validationFeedback">
+        Пожалуйста, заполните это поле.</div>
+      </div>
+      <div class="form-group col-6">
+      <input
+        type="text"
+        class="form-control"
+        id="inputParam_${formRows.current}_val"
+        name="inputParam_${formRows.current}"
+        placeholder=""
+        aria-describedby="validationFeedback"/>
+        <div class="invalid-feedback" id="validationFeedback">
+        Пожалуйста, заполните это поле.</div>
+      </div>`;
+
+    lastRow.insertAdjacentHTML("afterend", newRow);
+  };
+
+  const deleteRequestFormRow = () => {
+    if (formRows.current <= 3) return
+
+    let lastRow = document.getElementById(
+      `inputParam_${formRows.current}_val`
+    ).parentNode
+
+    if (!lastRow) return
+    lastRow.parentNode.removeChild(lastRow)
+
+    lastRow = document.getElementById(`inputParam_${formRows.current}`).parentNode
+
+    if (!lastRow) return
+    lastRow.parentNode.removeChild(lastRow)
+
+    formRows.current = formRows.current - 1
+  }
 
   return (
     <>
@@ -177,7 +305,30 @@ export default function Personal() {
         <a href="#">Просмотр инструкции к api</a>
       </div>
 
-<div className="request-report__wrapper">
+      <div className="request-token-modal__wrapper" ref={requestTokenDialog}>
+        <div className="request-token-modal">
+          <h2 className="request-token__title">Получение токена</h2>
+          <div className="request-token__content" id="request-token__content">
+            Получение токена доступно только для лицензии уровня Enterprise
+          </div>
+          <button
+            type="button"
+            className="request-token__btn"
+            id="request-token-dialog-btn"
+            onClick={() => {
+              requestTokenDialog.current.classList.remove(
+                "request-token-modal__wrapper_show"
+              );
+            }}
+          >
+            Хорошо
+          </button>
+        </div>
+      </div>
+
+      <br />
+
+      <div className="request-report__wrapper">
         <div className="request-report__description">
           Уникальный номер протокола формируется по номеру объекта, лаб.номеру и
           типу испытания, поэтому для разных протоколов эти параметры должны
@@ -185,7 +336,12 @@ export default function Personal() {
           одинаковыми номерами объекта и лаб.номерами, но тип опыта нужно
           вводить разный.
         </div>
-        <form className="row g-3" id="request-report">
+        <form
+          className="row g-3"
+          id="request-report"
+          ref={reportForm}
+          onSubmit={submitReport}
+        >
           <div className="col-md-4">
             <label for="inputObj">Объект *</label>
             <div className="input-group has-validation">
@@ -212,7 +368,7 @@ export default function Personal() {
                 required
                 aria-describedby="inputGroupObjInfo"
               />
-              
+              <div className="invalid-feedback">Ошибка в номере объекта</div>
             </div>
           </div>
           <div className="col-md-4">
@@ -241,7 +397,9 @@ export default function Personal() {
                 required
                 aria-describedby="inputGroupLabInfo"
               />
-              
+              <div className="invalid-feedback">
+                Ошибка в лабораторном номере
+              </div>
             </div>
           </div>
           <div className="col-md-4">
@@ -270,7 +428,7 @@ export default function Personal() {
                 required
                 aria-describedby="inputGroupTypeInfo"
               />
-              
+              <div className="invalid-feedback">Ошибка в типе испытания</div>
             </div>
           </div>
           <div className="col-6">
@@ -336,7 +494,9 @@ export default function Personal() {
               placeholder=""
               aria-describedby="validationFeedback"
             />
-            
+            <div className="invalid-feedback" id="validationFeedback">
+              Пожалуйста, заполните это поле.
+            </div>
           </div>
           <div className="col-6">
             <input
@@ -347,13 +507,16 @@ export default function Personal() {
               placeholder=""
               aria-describedby="validationFeedback"
             />
-            
+            <div className="invalid-feedback" id="validationFeedback">
+              Пожалуйста, заполните это поле.
+            </div>
           </div>
           <div className="request-form__actions">
             <button
               type="button"
               className="btn btn-outline-secondary request-form__action"
               id="request-form-add-btn"
+              onClick={addRow}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -370,6 +533,7 @@ export default function Personal() {
               type="button"
               className="btn btn-outline-secondary request-form__action"
               id="request-form-delete-btn"
+              onClick={deleteRequestFormRow}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
