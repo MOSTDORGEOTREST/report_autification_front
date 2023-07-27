@@ -27,6 +27,10 @@ export default function Personal() {
   const formRows = useRef(3);
   const maxFromRows = 10;
 
+  const [inputObj, setInputObj] = useState('') 
+  const [inputLabNo, setInputLabNo] = useState('') 
+  const [inputType, setInputType] = useState('') 
+
   const fetchUserData = () => {
     fetch("http://localhost:8555/auth/user/", {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
@@ -40,52 +44,7 @@ export default function Personal() {
     });
   };
 
-  const fetchReportsCount = () => {
-    fetch("http://localhost:8555/reports/count/", {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      credentials: "include", // include, *same-origin, omit
-    }).then((response) => {
-      if (response.ok && response.status === 200) {
-        response.json().then((data) => {
-          setReportsCount(data);
-        });
-      }
-    });
-  };
-
-  const fetchObjects = () => {
-    fetch("http://localhost:8555/reports/objects/", {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      credentials: "include", // include, *same-origin, omit
-    }).then((response) => {
-      if (response.ok && response.status === 200) {
-        response.json().then((data) => {
-          setObjects(data);
-        });
-      }
-    });
-  };
-
-  const fetchObject = (objId) => {
-    return new Promise((resolve, reject) => {
-      fetch(`http://localhost:8555/reports/objects/${objId}`, {
-        method: "GET", // *GET, POST, PUT, DELETE, etc.
-        credentials: "include", // include, *same-origin, omit
-      })
-        .then((response) => {
-          if (response.ok && response.status === 200) {
-            response
-              .json()
-              .then((data) => {
-                resolve(data);
-              })
-              .catch((err) => reject(err));
-          }
-        })
-        .catch((err) => reject(err));
-    });
-  };
-
+  
   const requestToken = () => {
     fetch("http://localhost:8555/auth/token/", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -107,92 +66,33 @@ export default function Personal() {
       }
     });
   };
+  
 
-  const setReportForDel = (reportId) => {
-    if (!reportId) return;
-
-    delReportId.current = reportId;
-    delReportDialog.current.classList.add("del-report-modal__wrapper_show");
-  };
-
-  const delReport = () => {
-    if (!delReportId.current) return;
-
-    fetch(`http://localhost:8555/reports/?id=${delReportId.current}`, {
-      method: "DELETE", // *GET, POST, PUT, DELETE, etc.
-      credentials: "include", // include, *same-origin, omit
-      headers: {
-        Accept: "*/*",
-      },
-    }).then(() => {
-      delReportDialog.current.classList.remove(
-        "del-report-modal__wrapper_show"
-      );
-      fetchObjects();
-    });
-  };
-
-  function downloadData(_BLOB, _file_name) {
-    const a = document.createElement("a");
-    a.href = window.URL.createObjectURL(_BLOB);
-    a.target = "_blank";
-    a.download = _file_name;
-    a.click();
-  }
-
-  const dowloadQr = (ID, object_number, laboratory_number, test_type) => {
-    if (!ID) return;
-
-    fetch(`http://localhost:8555/reports/qr?id=${ID}`, {
-      method: "POST",
-      credentials: "include", // include, *same-origin, omit
-      headers: {
-        Accept: "application/json",
-      },
+  function clearSubmit() {
+    const inputs = document.querySelectorAll('#request-report .form-control')
+    inputs.forEach((input) => {
+      input.classList.remove('is-valid')
+      input.classList.remove('is-invalid')
     })
-      .then((response) => {
-        return response.blob();
-      })
-      .then((data) => {
-        downloadData(
-          data,
-          `${object_number} - ${laboratory_number} - ${test_type}`
-        );
-      });
-  };
-
-  useEffect(() => {
-    if (!logged) return;
-
-    fetchUserData();
-    fetchReportsCount();
-    fetchObjects();
-  }, [logged]);
-
-  useEffect(() => {
-    if (!objects) return;
-
-    let promiseArr = objects
-      .filter((obj) => {
-        if (selectedObj) return obj === selectedObj;
-        return true;
-      })
-      .map((obj) => {
-        return fetchObject(obj).then((data) => {
-          if (!data) return null;
-          return data;
-        });
-      });
-
-    Promise.all(promiseArr).then((data) => {
-      let objectsData = data.filter((obj) => (obj ? true : false));
-      if (!objectsData) return;
-      setObjectsData(objectsData.flat(1));
-    });
-  }, [objects, selectedObj]);
+  
+    const requestReportSuccses = document.getElementById('request-report-succses')
+    if (requestReportSuccses) {
+      requestReportSuccses.classList.remove('request-report-succses-show')
+    }
+  }
 
   const submitReport = () => {
     console.log(reportForm.current);
+
+
+    clearSubmit();
+
+    console.log(reportForm.current.inputObj)
+    console.log(reportForm.current.inputType);
+    console.log(reportForm.current.inputLabNo);
+    // inputObj
+    // inputType
+    // inputLabNo
   };
 
   const addRow = () => {
@@ -367,6 +267,8 @@ export default function Personal() {
                 placeholder="111-11"
                 required
                 aria-describedby="inputGroupObjInfo"
+                value={inputObj}
+                onChange={(event)=>setInputObj(event.value)}
               />
               <div className="invalid-feedback">Ошибка в номере объекта</div>
             </div>
@@ -396,6 +298,8 @@ export default function Personal() {
                 placeholder="A1-1/AA"
                 required
                 aria-describedby="inputGroupLabInfo"
+                value={inputLabNo}
+                onChange={(event)=>setInputLabNo(event.value)}
               />
               <div className="invalid-feedback">
                 Ошибка в лабораторном номере
@@ -427,6 +331,8 @@ export default function Personal() {
                 placeholder="FC, FCE, вибро, консолидация и т.д."
                 required
                 aria-describedby="inputGroupTypeInfo"
+                value={inputType}
+                onChange={(event)=>setInputType(event.value)}
               />
               <div className="invalid-feedback">Ошибка в типе испытания</div>
             </div>
@@ -552,7 +458,7 @@ export default function Personal() {
               type="submit"
               className="btn-out btn btn-success btn-lg w-100 w-lg-50 align-center"
               id="request-report-submit-btn"
-              disabled
+              
             >
               Отправить
             </button>
@@ -565,11 +471,6 @@ export default function Personal() {
           </div>
         </div>
       </div>
-      
-
-      <br />
-
-      
     </>
   );
 }
