@@ -62,24 +62,20 @@ export default function Login() {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log(form);
-
     const inputs = document.querySelectorAll("#login-form input");
     inputs.forEach((input) => {
       input.classList.remove("is-valid");
       input.classList.remove("is-invalid");
     });
 
-    let error = false;
-
     if (!checkForm(form.current.username.value, form.current.password.value)) {
       inputs.forEach((input) => {
         input.classList.add("is-invalid");
       });
-      error = true;
+      return
     }
 
-    if (!error) login(form.current.username.value, form.current.password.value);
+    login(form.current.username.value, form.current.password.value);
   }
 
   return (

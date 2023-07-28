@@ -27,9 +27,9 @@ export default function Personal() {
   const formRows = useRef(3);
   const maxFromRows = 10;
 
-  const [inputObj, setInputObj] = useState('') 
-  const [inputLabNo, setInputLabNo] = useState('') 
-  const [inputType, setInputType] = useState('') 
+  const [inputObj, setInputObj] = useState("");
+  const [inputLabNo, setInputLabNo] = useState("");
+  const [inputType, setInputType] = useState("");
 
   const fetchUserData = () => {
     fetch("http://localhost:8555/auth/user/", {
@@ -44,7 +44,52 @@ export default function Personal() {
     });
   };
 
-  
+  const fetchReportsCount = () => {
+    fetch("http://localhost:8555/reports/count/", {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      credentials: "include", // include, *same-origin, omit
+    }).then((response) => {
+      if (response.ok && response.status === 200) {
+        response.json().then((data) => {
+          setReportsCount(data);
+        });
+      }
+    });
+  };
+
+  const fetchObjects = () => {
+    fetch("http://localhost:8555/reports/objects/", {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      credentials: "include", // include, *same-origin, omit
+    }).then((response) => {
+      if (response.ok && response.status === 200) {
+        response.json().then((data) => {
+          setObjects(data);
+        });
+      }
+    });
+  };
+
+  const fetchObject = (objId) => {
+    return new Promise((resolve, reject) => {
+      fetch(`http://localhost:8555/reports/objects/${objId}`, {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        credentials: "include", // include, *same-origin, omit
+      })
+        .then((response) => {
+          if (response.ok && response.status === 200) {
+            response
+              .json()
+              .then((data) => {
+                resolve(data);
+              })
+              .catch((err) => reject(err));
+          }
+        })
+        .catch((err) => reject(err));
+    });
+  };
+
   const requestToken = () => {
     fetch("http://localhost:8555/auth/token/", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -66,34 +111,251 @@ export default function Personal() {
       }
     });
   };
-  
+
+  const setReportForDel = (reportId) => {
+    if (!reportId) return;
+
+    delReportId.current = reportId;
+    delReportDialog.current.classList.add("del-report-modal__wrapper_show");
+  };
+
+  const delReport = () => {
+    if (!delReportId.current) return;
+
+    fetch(`http://localhost:8555/reports/?id=${delReportId.current}`, {
+      method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "*/*",
+      },
+    }).then(() => {
+      delReportDialog.current.classList.remove(
+        "del-report-modal__wrapper_show"
+      );
+      fetchObjects();
+    });
+  };
+
+  function downloadData(_BLOB, _file_name) {
+    const a = document.createElement("a");
+    a.href = window.URL.createObjectURL(_BLOB);
+    a.target = "_blank";
+    a.download = _file_name;
+    a.click();
+  }
+
+  const dowloadQr = (ID, object_number, laboratory_number, test_type) => {
+    if (!ID) return;
+
+    fetch(`http://localhost:8555/reports/qr?id=${ID}`, {
+      method: "POST",
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        return response.blob();
+      })
+      .then((data) => {
+        downloadData(
+          data,
+          `${object_number} - ${laboratory_number} - ${test_type}`
+        );
+      });
+  };
+
+  useEffect(() => {
+    if (!logged) return;
+
+    fetchUserData();
+    fetchReportsCount();
+    fetchObjects();
+  }, [logged]);
+
+  useEffect(() => {
+    if (!objects) return;
+
+    let promiseArr = objects
+      .filter((obj) => {
+        if (selectedObj) return obj === selectedObj;
+        return true;
+      })
+      .map((obj) => {
+        return fetchObject(obj).then((data) => {
+          if (!data) return null;
+          return data;
+        });
+      });
+
+    Promise.all(promiseArr).then((data) => {
+      let objectsData = data.filter((obj) => (obj ? true : false));
+      if (!objectsData) return;
+      setObjectsData(objectsData.flat(1));
+    });
+  }, [objects, selectedObj]);
 
   function clearSubmit() {
-    const inputs = document.querySelectorAll('#request-report .form-control')
+    const inputs = document.querySelectorAll("#request-report .form-control");
     inputs.forEach((input) => {
-      input.classList.remove('is-valid')
-      input.classList.remove('is-invalid')
-    })
-  
-    const requestReportSuccses = document.getElementById('request-report-succses')
+      input.classList.remove("is-valid");
+      input.classList.remove("is-invalid");
+    });
+
+    const requestReportSuccses = document.getElementById(
+      "request-report-succses"
+    );
     if (requestReportSuccses) {
-      requestReportSuccses.classList.remove('request-report-succses-show')
+      requestReportSuccses.classList.remove("request-report-succses-show");
     }
   }
 
-  const submitReport = () => {
-    console.log(reportForm.current);
-
+  const submitReport = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
     clearSubmit();
 
-    console.log(reportForm.current.inputObj)
-    console.log(reportForm.current.inputType);
-    console.log(reportForm.current.inputLabNo);
-    // inputObj
-    // inputType
-    // inputLabNo
+    const inputObj = document.getElementById("inputObj"),
+      inputLabNo = document.getElementById("inputLabNo"),
+      inputType = document.getElementById("inputType");
+
+    if (reportForm.current.inputObj.length === 0) {
+      inputObj.classList.add("is-invalid");
+      return;
+    } else inputObj.classList.add("is-valid");
+
+    if (reportForm.current.inputType === 0) {
+      inputLabNo.classList.add("is-invalid");
+      return;
+    } else inputLabNo.classList.add("is-valid");
+
+    if (reportForm.current.inputLabNo === 0) {
+      inputType.classList.add("is-invalid");
+      return;
+    } else inputType.classList.add("is-valid");
+
+    let notValid = false;
+    // Проверяем парные поля (поля должны быть заполнены по парам)
+    const inputs = document.querySelectorAll(
+      "#request-report .col-6 .form-control"
+    );
+    // Будем проверять элементы парами, проходя по массиву через одного
+    for (let i = 0; i < inputs.length - 1; i = i + 2) {
+      // Пустые пары тупо пропускаем
+      if (inputs[i].value.length === 0 && inputs[i + 1].value.length === 0) {
+        continue;
+      }
+      if (inputs[i].value.length === 0 && inputs[i + 1].value.length !== 0) {
+        inputs[i].classList.add("is-invalid");
+        inputs[i + 1].classList.add("is-valid");
+        notValid = true;
+        continue;
+      }
+      if (inputs[i].value.length !== 0 && inputs[i + 1].value.length === 0) {
+        inputs[i].classList.add("is-valid");
+        inputs[i + 1].classList.add("is-invalid");
+        notValid = true;
+        continue;
+      }
+      inputs[i].classList.add("is-valid");
+      inputs[i + 1].classList.add("is-valid");
+    }
+
+    if (notValid) return;
+
+    // Содаем из формы класс с данными
+    const formData = new FormData(event.target);
+
+    const resultInfo = {};
+    const resultData = {};
+
+    for (let [key, value] of formData.entries()) {
+      // Оба значения будут браться по параметру name парных элементов
+      // Если name импута содержит нижнее подчеркивание, то это парный элемент
+      if (key.includes("_")) {
+        const data = formData.getAll(key);
+
+        if (data[0].length === 0 || data[1].length === 0) {
+          continue;
+        }
+
+        resultData[data[0]] = data[1];
+      } else {
+        resultInfo[key] = value;
+      }
+    }
+
+    sendRequestReport(resultInfo, resultData);
   };
+
+  function sendRequestReport(info, tableData) {
+    fetch("http://localhost:8555/reports/report_and_qr", {
+      method: "POST",
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        object_number: info["inputObj"],
+        laboratory_number: info["inputLabNo"],
+        test_type: info["inputType"],
+        data: tableData,
+        active: true,
+      }),
+    }).then((response) => {
+      if (!response.ok) {
+        // console.log(response)
+        serverError();
+      } else {
+        response.blob().then((response_data) => {
+          if (response_data) {
+            // Показ сообщения об успехе
+            const requestReportSuccses = document.getElementById(
+              "request-report-succses"
+            );
+            if (requestReportSuccses) {
+              requestReportSuccses.classList.add("request-report-succses-show");
+            }
+
+            // Скачивание кода
+            downloadData(
+              response_data,
+              `${info["inputObj"]} - ${info["inputLabNo"]} - ${info["inputType"]}`
+            );
+
+            fetchObjects();
+            clearSubmit();
+            setInputObj("");
+            setInputLabNo("");
+            setInputType("");
+            const inputs = document.querySelectorAll(
+              "#request-report .form-control"
+            );
+            inputs.forEach((input) => {
+              input.classList.remove("is-valid");
+              input.classList.remove("is-invalid");
+              input.value = "";
+            });
+          } else {
+            serverError();
+          }
+        });
+        // window.location.reload()
+      }
+    });
+  }
+
+  function serverError() {
+    const inputs = document.querySelectorAll(
+      "#request-report .col-md-4 .form-control"
+    );
+    inputs.forEach((input) => {
+      input.classList.remove("is-valid");
+      input.classList.add("is-invalid");
+    });
+  }
 
   const addRow = () => {
     if (formRows.current >= maxFromRows) return;
@@ -134,22 +396,64 @@ export default function Personal() {
   };
 
   const deleteRequestFormRow = () => {
-    if (formRows.current <= 3) return
+    if (formRows.current <= 3) return;
 
     let lastRow = document.getElementById(
       `inputParam_${formRows.current}_val`
-    ).parentNode
+    ).parentNode;
 
-    if (!lastRow) return
-    lastRow.parentNode.removeChild(lastRow)
+    if (!lastRow) return;
+    lastRow.parentNode.removeChild(lastRow);
 
-    lastRow = document.getElementById(`inputParam_${formRows.current}`).parentNode
+    lastRow = document.getElementById(
+      `inputParam_${formRows.current}`
+    ).parentNode;
 
-    if (!lastRow) return
-    lastRow.parentNode.removeChild(lastRow)
+    if (!lastRow) return;
+    lastRow.parentNode.removeChild(lastRow);
 
-    formRows.current = formRows.current - 1
-  }
+    formRows.current = formRows.current - 1;
+  };
+
+  const setReportForUpdate = (labNo, obj, type, data) => {
+    clearSubmit();
+
+    const _requestReport = document.getElementById("request-report");
+
+    const gotoBlockValue =
+      _requestReport.parentNode.getBoundingClientRect().top + window.scrollY - 
+      document.querySelector("header").offsetHeight;
+    window.scrollTo({
+      top: gotoBlockValue,
+      behavior: "smooth",
+    });
+
+    const fillInputTable = (_data) => {
+      const keys = Object.keys(_data);
+      const dataLenth = keys.length;
+
+      while (formRows < dataLenth && formRows < maxFromRows) {
+        addRow();
+      }
+
+      if (formRows < keys.length) return;
+
+      for (let row = 0; row < keys.length; row++) {
+        let inputRow = document.getElementById(`inputParam_${row + 1}`);
+        let inputRowVal = document.getElementById(`inputParam_${row + 1}_val`);
+
+        if (!inputRow || !inputRowVal) continue;
+
+        inputRow.value = keys[row];
+        inputRowVal.value = _data[keys[row]];
+      }
+    };
+
+    setInputLabNo(labNo);
+    setInputObj(obj);
+    setInputType(type);
+    fillInputTable(data);
+  };
 
   return (
     <>
@@ -268,7 +572,7 @@ export default function Personal() {
                 required
                 aria-describedby="inputGroupObjInfo"
                 value={inputObj}
-                onChange={(event)=>setInputObj(event.value)}
+                onChange={(event) => setInputObj(event.target.value)}
               />
               <div className="invalid-feedback">Ошибка в номере объекта</div>
             </div>
@@ -299,7 +603,7 @@ export default function Personal() {
                 required
                 aria-describedby="inputGroupLabInfo"
                 value={inputLabNo}
-                onChange={(event)=>setInputLabNo(event.value)}
+                onChange={(event) => setInputLabNo(event.target.value)}
               />
               <div className="invalid-feedback">
                 Ошибка в лабораторном номере
@@ -332,7 +636,7 @@ export default function Personal() {
                 required
                 aria-describedby="inputGroupTypeInfo"
                 value={inputType}
-                onChange={(event)=>setInputType(event.value)}
+                onChange={(event) => setInputType(event.target.value)}
               />
               <div className="invalid-feedback">Ошибка в типе испытания</div>
             </div>
@@ -458,7 +762,16 @@ export default function Personal() {
               type="submit"
               className="btn-out btn btn-success btn-lg w-100 w-lg-50 align-center"
               id="request-report-submit-btn"
-              
+              disabled={
+                inputObj &&
+                inputObj.length > 0 &&
+                inputType &&
+                inputType.length > 0 &&
+                inputLabNo &&
+                inputLabNo.length > 0
+                  ? false
+                  : true
+              }
             >
               Отправить
             </button>
@@ -471,6 +784,246 @@ export default function Personal() {
           </div>
         </div>
       </div>
+
+      <br />
+
+      <h2 className="container__title">Выданные протоколы</h2>
+
+      <div className="dropdown">
+        <button
+          className="btn dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Выбор объекта
+        </button>
+        <ul
+          className="dropdown-menu  verticalScroll"
+          aria-labelledby="dropdownMenuButton1"
+        >
+          <li>
+            <button
+              className="dropdown-item"
+              onClick={() => setSelectedObj(null)}
+            >
+              Все объекты
+            </button>
+          </li>
+          {!objects ? (
+            <></>
+          ) : (
+            objects.map(function (object, i) {
+              return (
+                <li key={i}>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      setSelectedObj(object);
+                      setPage(0);
+                    }}
+                  >
+                    {object}
+                  </button>
+                </li>
+              );
+            })
+          )}
+        </ul>
+      </div>
+
+      <div className="table-report__wrapper">
+        <table className="table">
+          <tbody>
+            <tr>
+              <th scope="col">
+                <p>Дата выдачи:</p>
+              </th>
+              <th scope="col">
+                <p>Объект:</p>
+              </th>
+              <th scope="col">
+                <p>Лаб. номер:</p>
+              </th>
+              <th scope="col">
+                <p>Тип испытания</p>
+              </th>
+              <th scope="col">
+                <p>Информация:</p>
+              </th>
+              <th scope="col">
+                <p>Действия:</p>
+              </th>
+            </tr>
+            {!objectsData
+              ? ""
+              : objectsData
+                  .slice(page * pageLim, page * pageLim + pageLim)
+                  .map((report, i) => {
+                    return (
+                      <tr key={i}>
+                        <td className="table__td">
+                          {report["datetime"].split("T")[0]}
+                        </td>
+                        <td className="table__td">{report["object_number"]}</td>
+                        <td className="table__td">
+                          {report["laboratory_number"]}
+                        </td>
+                        <td className="table__td">{report["test_type"]}</td>
+                        <td className="table__td">
+                          {Object.keys(report["data"]).map((key) => (
+                            <div>
+                              {key}: {report["data"][key]}
+                            </div>
+                          ))}
+                        </td>
+                        <td className="table__td">
+                          <div className="action">
+                            <button
+                              className="update-report-btn"
+                              // data-id="{{ key }}"
+                              // data-object_number="{{ value["object_number"] }}"
+                              // data-laboratory_number="{{ value["laboratory_number"] }}"
+                              // data-test_type="{{ value["test_type"] }}"
+                            >
+                              <img
+                                src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/update.png"
+                                className="img-fluid"
+                                width="30"
+                                height="30"
+                                alt="update"
+                                onClick={() => {
+                                  setReportForUpdate(
+                                    report["object_number"],
+                                    report["laboratory_number"],
+                                    report["test_type"],
+                                    report["data"]
+                                  );
+                                }}
+                              />
+                            </button>
+                            <button
+                              className="delete-report-btn"
+                              onClick={() => setReportForDel(report["id"])}
+                              // data-id="{{ key }}"
+                            >
+                              <img
+                                src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/trash.png"
+                                className="img-fluid"
+                                width="30"
+                                height="30"
+                                alt="delete"
+                              />
+                            </button>
+                            <button
+                              className="download-report-btn"
+                              // data-id=" key "
+                              // data-object_number='value["object_number"]'
+                              // data-laboratory_number='value["laboratory_number"]'
+                              // data-test_type='value["test_type"]'
+                              onClick={() => {
+                                dowloadQr(
+                                  report["id"],
+                                  report["object_number"],
+                                  report["laboratory_number"],
+                                  report["test_type"]
+                                );
+                              }}
+                            >
+                              <img
+                                src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/download.png"
+                                className="img-fluid"
+                                width="30"
+                                height="30"
+                                alt="download"
+                              />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <nav aria-label="Page navigation example">
+          {!objectsData ? (
+            <li className="page-item active">
+              <button
+                className="page-link"
+                onClick={() => {
+                  setPage(0);
+                }}
+              >
+                1
+              </button>
+            </li>
+          ) : (
+            <ul className="pagination horizontalScroll">
+              {Array(Math.ceil(objectsData.length / pageLim))
+                .fill(0)
+                .map((elem, i) => {
+                  return (
+                    <li
+                      className={`page-item  ${page === i ? "active" : ""}`}
+                      key={i}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => {
+                          setPage(i);
+                        }}
+                      >
+                        {i + 1}
+                      </button>
+                    </li>
+                  );
+                })}
+            </ul>
+          )}
+        </nav>
+      </div>
+
+      <div
+        className="del-report-modal__wrapper"
+        id="del-report-dialog"
+        ref={delReportDialog}
+      >
+        <div className="del-report-modal">
+          <h2 className="del-report__title">Удалить отчет?</h2>
+          <div className="del-report__content">
+            Это действие отменить нельзя.
+          </div>
+          <div className="del-report__actions">
+            <button
+              type="button"
+              className="del-report__btn"
+              id="del-report__btn-cancel"
+              onClick={() => {
+                delReportId.current = null;
+                delReportDialog.current.classList.remove(
+                  "del-report-modal__wrapper_show"
+                );
+              }}
+            >
+              Отмена
+            </button>
+            <button
+              type="button"
+              className="del-report__btn"
+              id="del-report__btn-del"
+              onClick={delReport}
+            >
+              Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <br />
     </>
   );
 }

@@ -1,4 +1,19 @@
+.action {
+  display: flex;
+}
 
+.table-report__wrapper th {
+  vertical-align: top;
+}
+.table-report__wrapper button{
+  background-color: transparent;
+}
+.table-report__wrapper button:focus-visible,
+ .table-report__wrapper button:hover {
+  opacity: 0.8;
+}
+
+.del-report-modal__wrapper,
 .request-token-modal__wrapper {
   position: fixed;
   top: 0;
@@ -19,6 +34,7 @@
   visibility: hidden;
 }
 
+.del-report-modal,
 .request-token-modal {
   max-height: 360px;
   min-width: 240px;
@@ -41,6 +57,8 @@
   visibility: hidden;
 }
 
+.del-report-modal__wrapper.del-report-modal__wrapper_show,
+.del-report-modal__wrapper.del-report-modal__wrapper_show .del-report-modal,
 .request-token-modal__wrapper.request-token-modal__wrapper_show,
 .request-token-modal__wrapper.request-token-modal__wrapper_show
   .request-token-modal {
@@ -48,6 +66,7 @@
   visibility: visible;
 }
 
+.del-report__title,
 .request-token__title {
   font-size: var(--h2-font-size);
   font-weight: var(--font-semi-bold);
@@ -60,6 +79,7 @@
   border-bottom: 1px solid transparent;
 }
 
+.del-report__title::before,
 .request-token__title::before {
   display: inline-block;
   width: 0;
@@ -68,6 +88,30 @@
   vertical-align: 0;
 }
 
+.del-report__content,
+.request-token__content {
+  padding: 20px 24px;
+  padding-top: 0;
+
+  opacity: 0.6;
+  font-size: var(--normal-font-size);
+  line-height: 1.5rem;
+  font-weight: var(--font-base);
+  letter-spacing: 0.03125em;
+}
+
+.del-report__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 52px;
+  padding: 8px;
+  border-top: 1px solid transparent;
+  column-gap: 8px;
+}
+
+.del-report__btn,
 .request-token__btn {
   text-align: right;
   height: 36px;
@@ -84,6 +128,13 @@
   color: var(--first-color);
 }
 
+.action {
+  display: flex;
+}
+
+.table-report__wrapper th {
+  vertical-align: top;
+}
 
 .request-token__wrapper {
   width: 100%;
@@ -197,4 +248,8 @@
   overflow-y: scroll;
 }
 
-
+.horizontalScroll {
+  width: fit-content;
+  max-width: 500px;
+  /* overflow-y: scroll; */
+}
