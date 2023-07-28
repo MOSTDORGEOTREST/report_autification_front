@@ -2581,7 +2581,7 @@ textarea.form-control.is-invalid {
 .btn-check:focus + .btn,
 .btn:focus {
 	outline: 0;
-	box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+	box-shadow: 0 0 0 0.25rem #90a165;
 }
 .btn.disabled,
 .btn:disabled,
@@ -2591,20 +2591,20 @@ fieldset:disabled .btn {
 }
 .btn-primary {
 	color: #fff;
-	background-color: #0d6efd;
-	border-color: #0d6efd;
+	background-color: #73893d;
+	border-color: #73893d;
 }
 .btn-primary:hover {
 	color: #fff;
-	background-color: #0b5ed7;
-	border-color: #0a58ca;
+	background-color: #73893d;
+	border-color: #73893d;
 }
 .btn-check:focus + .btn-primary,
 .btn-primary:focus {
 	color: #fff;
-	background-color: #0b5ed7;
-	border-color: #0a58ca;
-	box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+	background-color: #73893d;
+	border-color: #73893d;
+	box-shadow: 0 0 0 0.25rem #90a165;
 }
 .btn-check:active + .btn-primary,
 .btn-check:checked + .btn-primary,
@@ -2620,7 +2620,7 @@ fieldset:disabled .btn {
 .btn-primary.active:focus,
 .btn-primary:active:focus,
 .show > .btn-primary.dropdown-toggle:focus {
-	box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+	box-shadow: 0 0 0 0.25rem #90a165;
 }
 .btn-primary.disabled,
 .btn-primary:disabled {
@@ -4279,7 +4279,7 @@ fieldset:disabled .btn {
 .page-link {
 	position: relative;
 	display: block;
-	color: #0d6efd;
+	color: hsl(212, 11%, 23%);
 	text-decoration: none;
 	background-color: #fff;
 	border: 1px solid #dee2e6;
@@ -4293,16 +4293,16 @@ fieldset:disabled .btn {
 }
 .page-link:hover {
 	z-index: 2;
-	color: #0a58ca;
+	color: hsl(212, 11%, 23%);
 	background-color: #e9ecef;
 	border-color: #dee2e6;
 }
 .page-link:focus {
 	z-index: 3;
-	color: #0a58ca;
+	color: hsl(212, 11%, 23%);
 	background-color: #e9ecef;
 	outline: 0;
-	box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+	box-shadow: 0 0 0 0.25rem #90a165;
 }
 .page-item:not(:first-child) .page-link {
 	margin-left: -1px;
@@ -4310,8 +4310,8 @@ fieldset:disabled .btn {
 .page-item.active .page-link {
 	z-index: 3;
 	color: #fff;
-	background-color: #0d6efd;
-	border-color: #0d6efd;
+	background-color: #73893d;
+	border-color: #73893d;
 }
 .page-item.disabled .page-link {
 	color: #6c757d;
