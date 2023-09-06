@@ -31,6 +31,8 @@ export default function Personal() {
   const [inputLabNo, setInputLabNo] = useState("");
   const [inputType, setInputType] = useState("");
 
+  const [updateID, setUpdateID] = useState(null);
+
   const fetchUserData = () => {
     fetch("http://localhost:8555/auth/user/", {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
@@ -184,6 +186,9 @@ export default function Personal() {
       .map((obj) => {
         return fetchObject(obj).then((data) => {
           if (!data) return null;
+
+          console.log(data);
+
           return data;
         });
       });
@@ -286,7 +291,14 @@ export default function Personal() {
       }
     }
 
-    sendRequestReport(resultInfo, resultData);
+    if (!updateID) {
+      sendRequestReport(resultInfo, resultData);
+      return;
+    }
+    if (updateID) {
+      sendUpdateReport(updateID, resultInfo, resultData);
+      return;
+    }
   };
 
   function sendRequestReport(info, tableData) {
@@ -338,6 +350,79 @@ export default function Personal() {
               input.classList.remove("is-invalid");
               input.value = "";
             });
+          } else {
+            serverError();
+          }
+        });
+        // window.location.reload()
+      }
+    });
+  }
+
+  function sendUpdateReport(id, info, tableData) {
+    fetch(`http://localhost:8555/reports/?id=${id}`, {
+      method: "PUT",
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: tableData,
+        active: true,
+      }),
+    }).then((response) => {
+      if (!response.ok) {
+        // console.log(response)
+        serverError();
+      } else {
+        response.blob().then((response_data) => {
+          if (response_data) {
+            // Показ сообщения об успехе
+            const requestReportSuccses = document.getElementById(
+              "request-report-succses"
+            );
+            if (requestReportSuccses) {
+              requestReportSuccses.classList.add("request-report-succses-show");
+            }
+
+            // Скачивание кода
+            fetch(`http://localhost:8555/reports/qr/?id=${id}`, {
+              method: "POST",
+              credentials: "include", // include, *same-origin, omit
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              }
+            }).then((response)=>{
+              if (!response.ok) {
+                // console.log(response)
+                serverError();
+                return;
+              } 
+
+              response.blob().then((response_data)=>{
+                downloadData(
+                  response_data,
+                  `${info["inputObj"]} - ${info["inputLabNo"]} - ${info["inputType"]}`
+                );
+    
+                fetchObjects();
+                clearSubmit();
+                setInputObj("");
+                setInputLabNo("");
+                setInputType("");
+                setUpdateID(null);
+                const inputs = document.querySelectorAll(
+                  "#request-report .form-control"
+                );
+                inputs.forEach((input) => {
+                  input.classList.remove("is-valid");
+                  input.classList.remove("is-invalid");
+                  input.value = "";
+                });
+              })
+            })
           } else {
             serverError();
           }
@@ -415,8 +500,10 @@ export default function Personal() {
     formRows.current = formRows.current - 1;
   };
 
-  const setReportForUpdate = (labNo, obj, type, data) => {
+  const setReportForUpdate = (id, labNo, obj, type, data) => {
     clearSubmit();
+
+    setUpdateID(id);
 
     const _requestReport = document.getElementById("request-report");
 
@@ -432,11 +519,11 @@ export default function Personal() {
       const keys = Object.keys(_data);
       const dataLenth = keys.length;
 
-      while (formRows < dataLenth && formRows < maxFromRows) {
+      while (formRows.current < dataLenth && formRows.current < maxFromRows) {
         addRow();
       }
 
-      if (formRows < keys.length) return;
+      if (formRows.current < keys.length) return;
 
       for (let row = 0; row < keys.length; row++) {
         let inputRow = document.getElementById(`inputParam_${row + 1}`);
@@ -895,8 +982,9 @@ export default function Personal() {
                                 alt="update"
                                 onClick={() => {
                                   setReportForUpdate(
-                                    report["object_number"],
+                                    report["id"],
                                     report["laboratory_number"],
+                                    report["object_number"],
                                     report["test_type"],
                                     report["data"]
                                   );

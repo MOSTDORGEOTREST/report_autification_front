@@ -152,10 +152,10 @@ export default function Navigation() {
 				</h2> */}
         <>
           <Routes>
-            <Route path="/" index element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/report/*" element={<Report />}/>
-            <Route path="/report/123" element={<Report />}> </Route>
+            <Route path="/report" element={<Report />} />
+            <Route path="/report/:id" element={<Report/>}/>
             {/* 404 Page */}
             {/* <Route path="*" element={<div>404</div>} /> */}
           </Routes>
