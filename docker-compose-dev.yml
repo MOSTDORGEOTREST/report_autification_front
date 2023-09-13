@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  node:
+    build:
+      context: './'
+      dockerfile: 'Dockerfile-dev'
+    environment:
+      - DISABLE_ESLINT_PLUGIN=true npm start
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro

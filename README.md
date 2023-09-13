@@ -1,17 +1,25 @@
 # Georeport
 
-### Сервис для аутентификации протоколов лабораторных испытаний. 
+### Сервис фронтенда для аутентификации протоколов лабораторных испытаний. 
 
 #### Функционал:
-* сервис данных пользователей
-* сервис лицензий хранит данные лицензий и проверяет лицензию пользователя при отправке запросов пользователя
-* сервис отчетов хранит данные по всем отчетам в базе
+* стартовая страница
+* личный кабинет
 
 #### Стек:
-* fastapi + postgresql + sqlalchemy + s3
 * react
 
-#### [Схема БД](https://dbdiagram.io/d/63088a2bf1a9b01b0feae726)
+## Запуск:
+1. Создать папку для проекта. Открыть папку в терминале и выполнить:\
+    `git init`\
+    `git clone https://github.com/MOSTDORGEOTREST/report_autification_front.git`
 
+2. Запуск через docker-compose:\
+    `docker-compose -f docker-compose-dev.yml up`\
+	Для прода:\
+    `docker-compose -f docker-compose-dev.yml up`
 
+Для очищения докера от проекта:\
+    `docker rm $(docker ps -a -q) -f`\
+    `docker rmi $(docker images -a -q) -f`
 

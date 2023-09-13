@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  front:
+    build:
+      context: './'
+      dockerfile: 'Dockerfile'
+    ports:
+      - 80:80
+    restart: always
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
