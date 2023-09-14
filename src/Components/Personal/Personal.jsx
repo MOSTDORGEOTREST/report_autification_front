@@ -34,7 +34,7 @@ export default function Personal() {
   const [updateID, setUpdateID] = useState(null);
 
   const fetchUserData = () => {
-    fetch("http://localhost:8555/auth/user/", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}auth/user/`, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
@@ -47,7 +47,7 @@ export default function Personal() {
   };
 
   const fetchReportsCount = () => {
-    fetch("http://localhost:8555/reports/count/", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/count/`, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
@@ -60,7 +60,7 @@ export default function Personal() {
   };
 
   const fetchObjects = () => {
-    fetch("http://localhost:8555/reports/objects/", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/objects/`, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
@@ -74,7 +74,7 @@ export default function Personal() {
 
   const fetchObject = (objId) => {
     return new Promise((resolve, reject) => {
-      fetch(`http://localhost:8555/reports/objects/${objId}`, {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}reports/objects/${objId}`, {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         credentials: "include", // include, *same-origin, omit
       })
@@ -93,7 +93,7 @@ export default function Personal() {
   };
 
   const requestToken = () => {
-    fetch("http://localhost:8555/auth/token/", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}auth/token/`, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
@@ -124,7 +124,7 @@ export default function Personal() {
   const delReport = () => {
     if (!delReportId.current) return;
 
-    fetch(`http://localhost:8555/reports/?id=${delReportId.current}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/?id=${delReportId.current}`, {
       method: "DELETE", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
       headers: {
@@ -149,7 +149,7 @@ export default function Personal() {
   const dowloadQr = (ID, object_number, laboratory_number, test_type) => {
     if (!ID) return;
 
-    fetch(`http://localhost:8555/reports/qr?id=${ID}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/qr?id=${ID}`, {
       method: "POST",
       credentials: "include", // include, *same-origin, omit
       headers: {
@@ -302,7 +302,7 @@ export default function Personal() {
   };
 
   function sendRequestReport(info, tableData) {
-    fetch("http://localhost:8555/reports/report_and_qr", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/report_and_qr`, {
       method: "POST",
       credentials: "include", // include, *same-origin, omit
       headers: {
@@ -360,7 +360,7 @@ export default function Personal() {
   }
 
   function sendUpdateReport(id, info, tableData) {
-    fetch(`http://localhost:8555/reports/?id=${id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/?id=${id}`, {
       method: "PUT",
       credentials: "include", // include, *same-origin, omit
       headers: {
@@ -387,7 +387,7 @@ export default function Personal() {
             }
 
             // Скачивание кода
-            fetch(`http://localhost:8555/reports/qr/?id=${id}`, {
+            fetch(`${process.env.REACT_APP_BACKEND_URL}reports/qr/?id=${id}`, {
               method: "POST",
               credentials: "include", // include, *same-origin, omit
               headers: {

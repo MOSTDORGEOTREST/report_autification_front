@@ -8,7 +8,7 @@ export default function PersonalHeader() {
   const { setLogged } = useContext(Context);
 
   function signOut() {
-    fetch("http://localhost:8555/auth/sign-out/", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}auth/sign-out/`, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
