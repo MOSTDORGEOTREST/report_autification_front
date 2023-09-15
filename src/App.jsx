@@ -15,6 +15,8 @@ function App() {
   const [logged, setLogged] = useState(false)
 
   useEffect(() => {
+    console.log('HELLO FROM .ENV : ', process.env.REACT_APP_TEST);
+
     const onPageLoad = () => {
       setLoaded(true);
     };
