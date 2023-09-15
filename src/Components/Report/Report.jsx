@@ -13,7 +13,7 @@ export default function Report() {
   }, []);
 
   const getReport = (id) => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}reports/?id=${id}`, {
+    fetch(`${process.env.REACT_APP_SERVER_IP}reports/?id=${id}`, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {

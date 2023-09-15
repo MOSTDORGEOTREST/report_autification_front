@@ -13,7 +13,7 @@ export default function Login() {
   const { logged, setLogged } = useContext(Context);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}auth/user/`, {
+    fetch(`${process.env.REACT_APP_SERVER_IP}auth/user/`, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
@@ -34,7 +34,7 @@ export default function Login() {
   }
 
   function login(username, password, gotoUrl = null) {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}auth/sign-in/`, {
+    fetch(`${process.env.REACT_APP_SERVER_IP}auth/sign-in/`, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
       headers: {
