@@ -22,6 +22,7 @@ export default function Personal() {
   const delReportId = useRef();
   const requestTokenDialog = useRef();
   const delReportDialog = useRef();
+  const submitBtnRef = useRef();
 
   const reportForm = useRef();
   const formRows = useRef(3);
@@ -124,13 +125,16 @@ export default function Personal() {
   const delReport = () => {
     if (!delReportId.current) return;
 
-    fetch(`${process.env.REACT_APP_SERVER_IP}reports/?id=${delReportId.current}`, {
-      method: "DELETE", // *GET, POST, PUT, DELETE, etc.
-      credentials: "include", // include, *same-origin, omit
-      headers: {
-        Accept: "*/*",
-      },
-    }).then(() => {
+    fetch(
+      `${process.env.REACT_APP_SERVER_IP}reports/?id=${delReportId.current}`,
+      {
+        method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+        credentials: "include", // include, *same-origin, omit
+        headers: {
+          Accept: "*/*",
+        },
+      }
+    ).then(() => {
       delReportDialog.current.classList.remove(
         "del-report-modal__wrapper_show"
       );
@@ -186,9 +190,6 @@ export default function Personal() {
       .map((obj) => {
         return fetchObject(obj).then((data) => {
           if (!data) return null;
-
-          console.log(data);
-
           return data;
         });
       });
@@ -227,16 +228,19 @@ export default function Personal() {
 
     if (reportForm.current.inputObj.length === 0) {
       inputObj.classList.add("is-invalid");
+      submitBtnRef.current.disabled = false;
       return;
     } else inputObj.classList.add("is-valid");
 
     if (reportForm.current.inputType === 0) {
       inputLabNo.classList.add("is-invalid");
+      submitBtnRef.current.disabled = false;
       return;
     } else inputLabNo.classList.add("is-valid");
 
     if (reportForm.current.inputLabNo === 0) {
       inputType.classList.add("is-invalid");
+      submitBtnRef.current.disabled = false;
       return;
     } else inputType.classList.add("is-valid");
 
@@ -267,7 +271,10 @@ export default function Personal() {
       inputs[i + 1].classList.add("is-valid");
     }
 
-    if (notValid) return;
+    if (notValid) {
+      submitBtnRef.current.disabled = false;
+      return
+    };
 
     // Содаем из формы класс с данными
     const formData = new FormData(event.target);
@@ -291,18 +298,19 @@ export default function Personal() {
       }
     }
 
-    if (!updateID) {
-      sendRequestReport(resultInfo, resultData);
-      return;
-    }
     if (updateID) {
       sendUpdateReport(updateID, resultInfo, resultData);
-      return;
+    } else {
+      sendRequestReport(resultInfo, resultData);
     }
+
+    fetchObjects();
+
+    submitBtnRef.current.disabled = false;
   };
 
   function sendRequestReport(info, tableData) {
-    fetch(`${process.env.REACT_APP_SERVER_IP}reports/report_and_qr`, {
+    fetch(`${process.env.REACT_APP_SERVER_IP}reports/`, {
       method: "POST",
       credentials: "include", // include, *same-origin, omit
       headers: {
@@ -321,7 +329,7 @@ export default function Personal() {
         // console.log(response)
         serverError();
       } else {
-        response.blob().then((response_data) => {
+        response.json().then((response_data) => {
           if (response_data) {
             // Показ сообщения об успехе
             const requestReportSuccses = document.getElementById(
@@ -331,24 +339,46 @@ export default function Personal() {
               requestReportSuccses.classList.add("request-report-succses-show");
             }
 
-            // Скачивание кода
-            downloadData(
-              response_data,
-              `${info["inputObj"]} - ${info["inputLabNo"]} - ${info["inputType"]}`
-            );
+            console.log(response_data);
 
-            fetchObjects();
-            clearSubmit();
-            setInputObj("");
-            setInputLabNo("");
-            setInputType("");
-            const inputs = document.querySelectorAll(
-              "#request-report .form-control"
-            );
-            inputs.forEach((input) => {
-              input.classList.remove("is-valid");
-              input.classList.remove("is-invalid");
-              input.value = "";
+            const id = 0;
+
+            // Скачивание кода
+            fetch(`${process.env.REACT_APP_SERVER_IP}reports/qr/?id=${id}`, {
+              method: "POST",
+              credentials: "include", // include, *same-origin, omit
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }).then((response) => {
+              if (!response.ok) {
+                // console.log(response)
+                serverError();
+                return;
+              }
+
+              response.blob().then((response_data) => {
+                downloadData(
+                  response_data,
+                  `${info["inputObj"]} - ${info["inputLabNo"]} - ${info["inputType"]}`
+                );
+
+                fetchObjects();
+                clearSubmit();
+                setInputObj("");
+                setInputLabNo("");
+                setInputType("");
+                setUpdateID(null);
+                const inputs = document.querySelectorAll(
+                  "#request-report .form-control"
+                );
+                inputs.forEach((input) => {
+                  input.classList.remove("is-valid");
+                  input.classList.remove("is-invalid");
+                  input.value = "";
+                });
+              });
             });
           } else {
             serverError();
@@ -393,20 +423,20 @@ export default function Personal() {
               headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-              }
-            }).then((response)=>{
+              },
+            }).then((response) => {
               if (!response.ok) {
                 // console.log(response)
                 serverError();
                 return;
-              } 
+              }
 
-              response.blob().then((response_data)=>{
+              response.blob().then((response_data) => {
                 downloadData(
                   response_data,
                   `${info["inputObj"]} - ${info["inputLabNo"]} - ${info["inputType"]}`
                 );
-    
+
                 fetchObjects();
                 clearSubmit();
                 setInputObj("");
@@ -421,8 +451,8 @@ export default function Personal() {
                   input.classList.remove("is-invalid");
                   input.value = "";
                 });
-              })
-            })
+              });
+            });
           } else {
             serverError();
           }
@@ -508,7 +538,8 @@ export default function Personal() {
     const _requestReport = document.getElementById("request-report");
 
     const gotoBlockValue =
-      _requestReport.parentNode.getBoundingClientRect().top + window.scrollY - 
+      _requestReport.parentNode.getBoundingClientRect().top +
+      window.scrollY -
       document.querySelector("header").offsetHeight;
     window.scrollTo({
       top: gotoBlockValue,
@@ -631,10 +662,15 @@ export default function Personal() {
           className="row g-3"
           id="request-report"
           ref={reportForm}
-          onSubmit={submitReport}
+          onSubmit={(event)=>{
+            submitBtnRef.current.disabled = true;
+            event.preventDefault();
+            event.stopPropagation();
+            submitReport(event);
+          }}
         >
           <div className="col-md-4">
-            <label for="inputObj">Объект *</label>
+            <label htmlFor="inputObj">Объект *</label>
             <div className="input-group has-validation">
               <span className="input-group-text" id="inputGroupObjInfo">
                 <svg
@@ -665,7 +701,7 @@ export default function Personal() {
             </div>
           </div>
           <div className="col-md-4">
-            <label for="inputLabNo">Лаб.№ *</label>
+            <label htmlFor="inputLabNo">Лаб.№ *</label>
             <div className="input-group has-validation">
               <span className="input-group-text" id="inputGroupLabInfo">
                 <svg
@@ -698,7 +734,7 @@ export default function Personal() {
             </div>
           </div>
           <div className="col-md-4">
-            <label for="inputType">Тип испытания *</label>
+            <label htmlFor="inputType">Тип испытания *</label>
             <div className="input-group has-validation">
               <span className="input-group-text" id="inputGroupTypeInfo">
                 <svg
@@ -729,7 +765,7 @@ export default function Personal() {
             </div>
           </div>
           <div className="col-6">
-            <label for="inputParam_1">Параметр</label>
+            <label htmlFor="inputParam_1">Параметр</label>
             <input
               type="text"
               className="form-control"
@@ -743,7 +779,7 @@ export default function Personal() {
             </div>
           </div>
           <div className="col-6">
-            <label for="inputParam_1_val">Значение</label>
+            <label htmlFor="inputParam_1_val">Значение</label>
             <input
               type="text"
               className="form-control"
@@ -849,13 +885,14 @@ export default function Personal() {
               type="submit"
               className="btn-out btn btn-success btn-lg w-100 w-lg-50 align-center"
               id="request-report-submit-btn"
+              ref={submitBtnRef}
               disabled={
-                inputObj &&
-                inputObj.length > 0 &&
-                inputType &&
-                inputType.length > 0 &&
-                inputLabNo &&
-                inputLabNo.length > 0
+                (inputObj &&
+                  inputObj.length > 0 &&
+                  inputType &&
+                  inputType.length > 0 &&
+                  inputLabNo &&
+                  inputLabNo.length > 0)
                   ? false
                   : true
               }
@@ -960,7 +997,7 @@ export default function Personal() {
                         <td className="table__td">{report["test_type"]}</td>
                         <td className="table__td">
                           {Object.keys(report["data"]).map((key) => (
-                            <div>
+                            <div key={key}>
                               {key}: {report["data"][key]}
                             </div>
                           ))}

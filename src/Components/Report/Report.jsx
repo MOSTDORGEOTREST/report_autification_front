@@ -58,7 +58,6 @@ export default function Report() {
     });
   };
 
-
   function downloadData(_BLOB, _file_name) {
     const a = document.createElement("a");
     a.href = window.URL.createObjectURL(_BLOB);
@@ -67,7 +66,7 @@ export default function Report() {
     a.click();
   }
 
-  const dowloadFile = (link, ID, filename) => {
+  const dowloadFile = (link, object_number, laboratory_number, test_type, filename) => {
     if (!link) return;
 
     fetch(`${process.env.REACT_APP_SERVER_IP}s3/?key=${link}`, {
@@ -81,10 +80,7 @@ export default function Report() {
         return response.blob();
       })
       .then((data) => {
-        downloadData(
-          data,
-          `${ID} - ${filename}`
-        );
+        downloadData(data, `${object_number} - ${laboratory_number} - ${test_type} ${filename}`);
       });
   };
 
@@ -176,11 +172,11 @@ export default function Report() {
                                 <>
                                   <a
                                     href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
-                                    onClick={(event)=>{
+                                    onClick={(event) => {
                                       event.preventDefault();
                                       event.stopPropagation();
 
-                                      dowloadFile(file.link, id, file.filename)
+                                      dowloadFile(file.link, report.object_number, report.laboratory_number, report.test_type, file.filename);
                                     }}
                                   >
                                     {file.filename}
@@ -193,11 +189,11 @@ export default function Report() {
                               ) : (
                                 <a
                                   href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
-                                  onClick={(event)=>{
+                                  onClick={(event) => {
                                     event.preventDefault();
                                     event.stopPropagation();
 
-                                    dowloadFile(file.link, id, file.filename)
+                                    dowloadFile(file.link, report.object_number, report.laboratory_number, report.test_type, file.filename);
                                   }}
                                 >
                                   {file.filename}
@@ -240,11 +236,11 @@ export default function Report() {
                                 <>
                                   <a
                                     href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
-                                    onClick={(event)=>{
+                                    onClick={(event) => {
                                       event.preventDefault();
                                       event.stopPropagation();
 
-                                      dowloadFile(file.link, id, file.filename)
+                                      dowloadFile(file.link, report.object_number, report.laboratory_number, report.test_type, file.filename);
                                     }}
                                   >
                                     {file.filename}
@@ -257,11 +253,11 @@ export default function Report() {
                               ) : (
                                 <a
                                   href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
-                                  onClick={(event)=>{
+                                  onClick={(event) => {
                                     event.preventDefault();
                                     event.stopPropagation();
 
-                                    dowloadFile(file.link, id, file.filename)
+                                    dowloadFile(file.link, report.object_number, report.laboratory_number, report.test_type, file.filename);
                                   }}
                                 >
                                   {file.filename}
