@@ -148,7 +148,7 @@ export default function Footer() {
           >
             <img className="footer__img" src={mdgt} alt="логотип МДГТ" />
           </a>
-          <span className="text-muted_mdgt">&copy; Мостдоргеотрест 2022</span>
+          <span className="text-muted_mdgt">&copy; Мостдоргеотрест {new Date().getFullYear()}</span>
         </div>
 
         <div

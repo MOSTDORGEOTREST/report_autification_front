@@ -7,11 +7,13 @@ export default function Report() {
   const { id } = useParams();
   const [report, setReport] = useState(null);
   const [additional, setAdditional] = useState(null);
+  const [notes, setNotes] = useState(null);
 
   useEffect(() => {
     if (!id) return;
     getReport(id);
     getAdditional(id);
+    getNotes(id);
   }, []);
 
   const getReport = (id) => {
@@ -42,6 +44,50 @@ export default function Report() {
     });
   };
 
+  const getNotes = (id) => {
+    fetch(`${process.env.REACT_APP_SERVER_IP}test_type_files/${id}`, {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      credentials: "include", // include, *same-origin, omit
+    }).then((response) => {
+      if (response.ok && response.status === 200) {
+        response.json().then((data) => {
+          setNotes(data);
+          console.log(data);
+        });
+      }
+    });
+  };
+
+
+  function downloadData(_BLOB, _file_name) {
+    const a = document.createElement("a");
+    a.href = window.URL.createObjectURL(_BLOB);
+    a.target = "_blank";
+    a.download = _file_name;
+    a.click();
+  }
+
+  const dowloadFile = (link, ID, filename) => {
+    if (!link) return;
+
+    fetch(`${process.env.REACT_APP_SERVER_IP}s3/?key=${link}`, {
+      method: "GET",
+      credentials: "include", // include, *same-origin, omit
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        return response.blob();
+      })
+      .then((data) => {
+        downloadData(
+          data,
+          `${ID} - ${filename}`
+        );
+      });
+  };
+
   return (
     <>
       {report ? (
@@ -54,9 +100,17 @@ export default function Report() {
               />
               <div className="table-header__wrapper">
                 <div className="table-header__title-wrapper">
-                  <div className="table-header__title_main">title</div>
+                  <div className="table-header__title_main">
+                    МОСТДОРГЕОТРЕСТ
+                  </div>
                 </div>
-                <a href="#" target="_blank" className="table-header__url"></a>
+                <a
+                  href="https://mdgt.ru"
+                  target="_blank"
+                  className="table-header__url"
+                >
+                  mdgt.ru
+                </a>
               </div>
             </div>
             <table className="table__table">
@@ -97,91 +151,133 @@ export default function Report() {
             </table>
           </div>
 
-          {/* {% if files.items()|length > 0 %} */}
-          <div className="table__container table__container-additional">
-            <div className="table-header">
-              <div className="table-header__wrapper">
-                <div className="table-header__title-wrapper">
-                  <div className="table-header__title_main">
-                    Дополнительные файлы
+          {additional ? (
+            <div className="table__container table__container-additional">
+              <div className="table-header">
+                <div className="table-header__wrapper">
+                  <div className="table-header__title-wrapper">
+                    <div className="table-header__title_main">
+                      Дополнительные файлы
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <table className="table__table table__table-additional">
-              <tbody className="table__tbody">
-                {additional
-                  ? additional.map((file) => {
-                    const filenameArr = file.filename.split(".")
-                    console.log(filenameArr[filenameArr.length-1]);
-                      return (
-                        <tr className="table__tr table__tr-additional">
-                          <td className="table__td">
-                            {["png", "jpg"].includes(filenameArr[filenameArr.length-1]) ? (
-                              <>
-                                <a href={file.link} target="_blank">
+              <table className="table__table table__table-additional">
+                <tbody className="table__tbody">
+                  {additional
+                    ? additional.map((file) => {
+                        const filenameArr = file.filename.split(".");
+                        return (
+                          <tr className="table__tr table__tr-additional">
+                            <td className="table__td">
+                              {["png", "jpg"].includes(
+                                filenameArr[filenameArr.length - 1]
+                              ) ? (
+                                <>
+                                  <a
+                                    href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
+                                    onClick={(event)=>{
+                                      event.preventDefault();
+                                      event.stopPropagation();
+
+                                      dowloadFile(file.link, id, file.filename)
+                                    }}
+                                  >
+                                    {file.filename}
+                                  </a>
+                                  <img
+                                    src={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
+                                    alt=""
+                                  />
+                                </>
+                              ) : (
+                                <a
+                                  href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
+                                  onClick={(event)=>{
+                                    event.preventDefault();
+                                    event.stopPropagation();
+
+                                    dowloadFile(file.link, id, file.filename)
+                                  }}
+                                >
                                   {file.filename}
                                 </a>
-                                <img src={'..'+file.link} alt="" />
-                              </>
-                            ) : (
-                              <a href={file.link} target="_blank">
-                                {file.filename}
-                              </a>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : ""}
-                {/* // {% for key, value in files.items() %}
-                // <tr className="table__tr table__tr-additional">
-                //   <td className="table__td">
-                //     {% if value.split('.')[-1] in ['png', 'jpg'] %}<a href="{{value}}" target="_blank" >{{ key }}</a><img src="{{value}}" alt="" />
-                {% else %}<a href="{{value}}" target="_blank">{{ key }}</a>
-                //     // {% endif%}
-                //   </td>
-                // </tr>
-                // {% endfor %} */}
-              </tbody>
-            </table>
-          </div>
-          {/* // {% else %} */}
-          <div></div>
-          {/* // {% endif %} */}
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : ""}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            ""
+          )}
 
-          {/* // {% if test_type_files.items()|length > 0 %} */}
-          <div className="table__container table__container-additional">
-            <div className="table-header">
-              <div className="table-header__wrapper">
-                <div className="table-header__title-wrapper">
-                  <div className="table-header__title_main">
-                    Справочные файлы
+          {notes ? (
+            <div className="table__container table__container-additional">
+              <div className="table-header">
+                <div className="table-header__wrapper">
+                  <div className="table-header__title-wrapper">
+                    <div className="table-header__title_main">
+                      Справочные файлы
+                    </div>
                   </div>
                 </div>
               </div>
+              <table className="table__table table__table-additional">
+                <tbody className="table__tbody">
+                  {notes
+                    ? notes.map((file) => {
+                        const filenameArr = file.filename.split(".");
+                        return (
+                          <tr className="table__tr table__tr-additional">
+                            <td className="table__td">
+                              {["png", "jpg"].includes(
+                                filenameArr[filenameArr.length - 1]
+                              ) ? (
+                                <>
+                                  <a
+                                    href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
+                                    onClick={(event)=>{
+                                      event.preventDefault();
+                                      event.stopPropagation();
+
+                                      dowloadFile(file.link, id, file.filename)
+                                    }}
+                                  >
+                                    {file.filename}
+                                  </a>
+                                  <img
+                                    src={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
+                                    alt=""
+                                  />
+                                </>
+                              ) : (
+                                <a
+                                  href={`${process.env.REACT_APP_SERVER_IP}s3/?key=${file.link}`}
+                                  onClick={(event)=>{
+                                    event.preventDefault();
+                                    event.stopPropagation();
+
+                                    dowloadFile(file.link, id, file.filename)
+                                  }}
+                                >
+                                  {file.filename}
+                                </a>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : ""}
+                </tbody>
+              </table>
             </div>
-            <table className="table__table table__table-additional">
-              <tbody className="table__tbody">
-                {/* // {% for key, value in test_type_files.items() %}
-                <tr className="table__tr table__tr-additional">
-                  <td className="table__td">
-                    // {% if value.split('.')[-1] in ['png', 'jpg'] %}<a href="{{value}}" target="_blank"
-                    //   >{{ key }}</a
-                    // >
-                    // <img src="value" alt="" />{% else %}<a href="{{value}}" target="_blank"
-                    //   >{{ key }}</a
-                    // >
-                    // {% endif%}
-                  </td>
-                </tr> */}
-                {/* // { endfor } */}
-              </tbody>
-            </table>
-          </div>
-          {/* // { else } */}
-          <div></div>
-          {/* // { endif } */}
+          ) : (
+            ""
+          )}
         </div>
       ) : (
         "Данные по отчету не найдены."
