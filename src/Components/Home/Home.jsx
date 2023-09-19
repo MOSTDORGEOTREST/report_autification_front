@@ -6,7 +6,7 @@ import Context from "../../context";
 
 import { loadImage } from "../../Utils/functions";
 
-import checkMark from "../images/check-mark.png";
+import checkMark from "../images/check-mark.svg";
 import close from "../images/close.png";
 import mainimg from "../images/mainimg.png";
 import qr_index from "../images/qr_index.png";
