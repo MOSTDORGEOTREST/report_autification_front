@@ -4,7 +4,8 @@ import "./Home.css";
 
 import Context from "../../context";
 
-import { loadImage } from "../../Utils/functions";
+import { loadImage } from "../../Utils/loadImage";
+import { login, signOut } from "../../Utils/login";
 
 import checkMark from "../images/check-mark.svg";
 import close from "../images/close.png";
@@ -14,10 +15,14 @@ import lock from "../images/lock.gif";
 import server from "../images/server.gif";
 import qr_transparent from "../images/qr_transparent.png";
 import IsMobile from "../../Utils/IsMobile";
+import { useNavigate } from "react-router-dom";
+import whenReady from "../../Utils/whenReady";
 
 export default function Home() {
-  const { setHomeLoaded } = useContext(Context);
+  const { setHomeLoaded, setLogged } = useContext(Context);
   const [reports, setReports] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setHomeLoaded(false);
@@ -35,14 +40,14 @@ export default function Home() {
       })
       .catch((err) => {
         setHomeLoaded(true);
-        console.log("Failed to load images", err);
+        // console.log("Failed to load images", err);
       });
 
     function updateReports() {
       fetch(`https://georeport.ru/reports/count`)
         .then((response) => {
           if (response.ok && response.status === 200) return response.json();
-          return undefined
+          return undefined;
         })
         .then((data) => {
           if (data) {
@@ -61,8 +66,7 @@ export default function Home() {
       }
 
       if (IsMobile() && homeImgLink) {
-        const sectionTop =
-          homeImgLink.offsetTop;
+        const sectionTop = homeImgLink.offsetTop;
         window.addEventListener("scroll", () => {
           if (window.scrollY > sectionTop) {
             homeImgLink.classList.add("onscroll");
@@ -75,7 +79,7 @@ export default function Home() {
 
     updateReports();
     imageMove();
-  }, []);
+  }, [setHomeLoaded]);
 
   return (
     <>
@@ -99,19 +103,32 @@ export default function Home() {
               </h1>
             </div>
 
-            <a
+            <button
               className="btn-test btn btn-success btn-lg w-100 w-lg-50 align-center"
-              href="mailto:tnick1502@mail.ru"
               id="btn-test"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                signOut(setLogged).then(() => {
+                  login(setLogged, "trial", "trial").then(() => {
+                    whenReady().then(()=>{
+                      navigate("/login", { replace: true });
+                    });
+                  });
+                });
+              }}
             >
               Протестировать
-            </a>
+            </button>
           </div>
           <div className="home-img" id="homeImg">
             <img className="home-img__image" src={mainimg} alt="mainimg"></img>
             <div className="home-img__hover">
               <div className="home-img__link_wrapper">
-                <a href="/report/95465771a6f399bf52cd57db2cf640f8624fd868" className="home-img__hover_link">
+                <a
+                  href="/report/95465771a6f399bf52cd57db2cf640f8624fd868"
+                  className="home-img__hover_link"
+                >
                   <img src={qr_index} width="100px" alt="qr_index" />
                 </a>
               </div>
@@ -249,7 +266,6 @@ export default function Home() {
 
         <div className="index_content" id="license">
           <hr />
-
 
           <div className="mdgt-cards__wrapper">
             <div className="mdgt-card">

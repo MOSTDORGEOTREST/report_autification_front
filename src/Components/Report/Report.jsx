@@ -24,7 +24,7 @@ export default function Report() {
       if (response.ok && response.status === 200) {
         response.json().then((data) => {
           setReport(data);
-          console.log(data);
+          // console.log(data);
         });
       }
     });
@@ -38,7 +38,7 @@ export default function Report() {
       if (response.ok && response.status === 200) {
         response.json().then((data) => {
           setAdditional(data);
-          console.log(data);
+          // console.log(data);
         });
       }
     });
@@ -52,7 +52,7 @@ export default function Report() {
       if (response.ok && response.status === 200) {
         response.json().then((data) => {
           setNotes(data);
-          console.log(data);
+          // console.log(data);
         });
       }
     });
@@ -93,6 +93,7 @@ export default function Report() {
               <img
                 className="table-header__logo"
                 src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/lock.gif"
+                alt="lock"
               />
               <div className="table-header__wrapper">
                 <div className="table-header__title-wrapper">

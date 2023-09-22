@@ -4,21 +4,10 @@ import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import Context from "../../context";
 
+import {signOut} from '../../Utils/login'
+
 export default function PersonalHeader() {
   const { setLogged } = useContext(Context);
-
-  function signOut() {
-    fetch(`${process.env.REACT_APP_SERVER_IP}auth/sign-out/`, {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      credentials: "include", // include, *same-origin, omit
-    }).then((response) => {
-      if (!response.ok) {
-        setLogged(false);
-      } else {
-        setLogged(false);
-      }
-    });
-  }
 
   return (
     <>
@@ -60,7 +49,7 @@ export default function PersonalHeader() {
                   <button
                     className="nav-link-personal"
                     id="btn-out"
-                    onClick={signOut}
+                    onClick={()=>signOut(setLogged)}
                   >
                     Выйти
                   </button>

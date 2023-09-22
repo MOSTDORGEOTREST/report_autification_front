@@ -273,8 +273,8 @@ export default function Personal() {
 
     if (notValid) {
       submitBtnRef.current.disabled = false;
-      return
-    };
+      return;
+    }
 
     // Содаем из формы класс с данными
     const formData = new FormData(event.target);
@@ -339,7 +339,7 @@ export default function Personal() {
               requestReportSuccses.classList.add("request-report-succses-show");
             }
 
-            console.log(response_data);
+            // console.log(response_data);
 
             const id = 0;
 
@@ -662,7 +662,7 @@ export default function Personal() {
           className="row g-3"
           id="request-report"
           ref={reportForm}
-          onSubmit={(event)=>{
+          onSubmit={(event) => {
             submitBtnRef.current.disabled = true;
             event.preventDefault();
             event.stopPropagation();
@@ -887,12 +887,12 @@ export default function Personal() {
               id="request-report-submit-btn"
               ref={submitBtnRef}
               disabled={
-                (inputObj &&
-                  inputObj.length > 0 &&
-                  inputType &&
-                  inputType.length > 0 &&
-                  inputLabNo &&
-                  inputLabNo.length > 0)
+                inputObj &&
+                inputObj.length > 0 &&
+                inputType &&
+                inputType.length > 0 &&
+                inputLabNo &&
+                inputLabNo.length > 0
                   ? false
                   : true
               }

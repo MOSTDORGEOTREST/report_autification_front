@@ -7,6 +7,8 @@ import Context from "../../context";
 import { useEffect } from "react";
 import Personal from "../Personal/Personal";
 
+import { login } from "../../Utils/login";
+
 export default function Login() {
   const form = useRef();
 
@@ -23,7 +25,7 @@ export default function Login() {
         setLogged(true);
       }
     });
-  }, [setLogged]);
+  }, []);
 
   function checkForm(username, password) {
     if (username === "" || password === "") {
@@ -31,31 +33,6 @@ export default function Login() {
     } else {
       return true;
     }
-  }
-
-  function login(username, password, gotoUrl = null) {
-    fetch(`${process.env.REACT_APP_SERVER_IP}auth/sign-in/`, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      credentials: "include", // include, *same-origin, omit
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-        "X-Requested-With": "XMLHttpRequest",
-      },
-      body: `grant_type=password&username=${username}&password=${password}`,
-    }).then((response) => {
-      if (!response.ok) {
-        setLogged(false);
-        const inputs = document.querySelectorAll("#login-form input");
-        inputs.forEach((input) => {
-          input.classList.remove("is-valid");
-          input.classList.add("is-invalid");
-        });
-      } else {
-        setLogged(true);
-      }
-    });
   }
 
   function formSbmt(event) {
@@ -72,10 +49,10 @@ export default function Login() {
       inputs.forEach((input) => {
         input.classList.add("is-invalid");
       });
-      return
+      return;
     }
 
-    login(form.current.username.value, form.current.password.value);
+    login(setLogged, form.current.username.value, form.current.password.value);
   }
 
   return (
@@ -126,7 +103,7 @@ export default function Login() {
           </form>
         </>
       ) : (
-        <Personal/>
+        <Personal />
       )}
     </>
   );

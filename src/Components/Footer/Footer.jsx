@@ -41,10 +41,10 @@ export default function Footer() {
       return null;
     }
 
-    function eraseCookie(name) {
-      document.cookie =
-        name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    }
+    // function eraseCookie(name) {
+    //   document.cookie =
+    //     name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    // }
 
     function cookieConsent() {
       if (!getCookie("allowCookies")) {
