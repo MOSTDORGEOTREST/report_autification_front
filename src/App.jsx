@@ -12,7 +12,9 @@ function App() {
   const [homeLoaded, setHomeLoaded] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
-  const [logged, setLogged] = useState(false)
+  const [logged, setLogged] = useState(false);
+
+  const [toggleNav, setToggleNav] = useState(false);
 
   useEffect(() => {
     const onPageLoad = () => {
@@ -39,7 +41,15 @@ function App() {
     <>
       <div className={allLoaded ? "App" : "App hidden"}>
         <>
-          <Context.Provider value={{ setHomeLoaded, logged, setLogged }}>
+          <Context.Provider
+            value={{
+              setHomeLoaded,
+              logged,
+              setLogged,
+              toggleNav,
+              setToggleNav,
+            }}
+          >
             <Navigation />
             <Footer />
           </Context.Provider>

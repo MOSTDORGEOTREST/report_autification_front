@@ -101,7 +101,7 @@ export default function Footer() {
                     </h3>
                     <div className="contacts__description">
                       <a
-                        href="mailto:mostdorgeotrest@mail.ru"
+                        href="mailto:support@mdgt.ru"
                         target="_blank"
                         rel="noreferrer"
                         className="contacts__link"

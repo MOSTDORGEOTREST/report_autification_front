@@ -111,7 +111,7 @@ export default function Home() {
                 event.stopPropagation();
                 signOut(setLogged).then(() => {
                   login(setLogged, "trial", "trial").then(() => {
-                    whenReady().then(()=>{
+                    whenReady().then(() => {
                       navigate("/login", { replace: true });
                     });
                   });
@@ -293,7 +293,9 @@ export default function Home() {
                   </ul>
                 </div>
               </div>
-              <a className="mdgt-card__button">Приобрести</a>
+              <a className="mdgt-card__button" href="mailto:support@mdgt.ru">
+                Приобрести
+              </a>
             </div>
             <div className="mdgt-card best">
               <div className="mdgt-card__title">Расширенная</div>
@@ -330,7 +332,9 @@ export default function Home() {
                   </ul>
                 </div>
               </div>
-              <a className="mdgt-card__button">Приобрести</a>
+              <a className="mdgt-card__button" href="mailto:support@mdgt.ru">
+                Приобрести
+              </a>
             </div>
             <div className="mdgt-card">
               <div className="mdgt-card__title">Максимальная</div>
@@ -377,7 +381,9 @@ export default function Home() {
                   </ul>
                 </div>
               </div>
-              <a className="mdgt-card__button">Приобрести</a>
+              <a className="mdgt-card__button" href="mailto:support@mdgt.ru">
+                Приобрести
+              </a>
             </div>
           </div>
         </div>

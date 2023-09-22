@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
 import { NavHashLink } from "react-router-hash-link";
 import Login from "../Login/Login";
@@ -11,10 +11,12 @@ import Home from "../Home/Home";
 import Report from "../Report/Report";
 import { useLocation } from "react-router-dom";
 import PersonalHeader from "./PeronalHeader";
+
+import Context from "../../context";
 // import NotFound from '../NotFound/NotFound'
 
 export default function Navigation() {
-  const [toggleNav, setToggleNav] = useState(false);
+  const { toggleNav, setToggleNav } = useContext(Context);
 
   const route = useLocation();
 
@@ -38,6 +40,7 @@ export default function Navigation() {
   }
 
   const scrollWithOffset = (el) => {
+    console.log(el);
     const elementPosition = el.offsetTop - 30;
     window.scroll({
       top: elementPosition,
@@ -50,10 +53,14 @@ export default function Navigation() {
     <div className="wrapper">
       {!route.pathname.includes("login") ? (
         <>
-          {" "}
           <header className="navbar-mdgt">
             <nav className="container-fluid-mdgt container-mdgt">
-              <NavLink to="#" className="navbar-brand">
+              <NavLink
+                to="/#"
+                onClick={closeNav}
+                scroll={(el) => scrollWithOffset({ offsetTop: 30 })}
+                className="navbar-brand"
+              >
                 <img className="navbar-brand__icon" src={logo} alt="Логотип" />
               </NavLink>
 
@@ -76,9 +83,14 @@ export default function Navigation() {
                 >
                   <ul className="navbar-nav" onClick={wrapperClick}>
                     <li className="nav-item">
-                      <NavLink className="nav-link" to="/" onClick={closeNav}>
+                      <NavHashLink
+                        className="nav-link"
+                        to="/#"
+                        onClick={closeNav}
+                        scroll={(el) => scrollWithOffset({ offsetTop: 30 })}
+                      >
                         Главная
-                      </NavLink>
+                      </NavHashLink>
                     </li>
 
                     <li className="nav-item">
@@ -155,7 +167,7 @@ export default function Navigation() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/report" element={<Report />} />
-            <Route path="/report/:id" element={<Report/>}/>
+            <Route path="/report/:id" element={<Report />} />
             {/* 404 Page */}
             {/* <Route path="*" element={<div>404</div>} /> */}
           </Routes>
