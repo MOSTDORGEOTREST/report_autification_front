@@ -19,7 +19,7 @@ export default function Login() {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       credentials: "include", // include, *same-origin, omit
     }).then((response) => {
-      if (!response.ok) {
+      if (!response.ok || response.status !== 200) {
         setLogged(false);
       } else {
         setLogged(true);

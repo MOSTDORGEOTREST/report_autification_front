@@ -24,7 +24,7 @@ export async function login(setLogged, username, password) {
       },
       body: `grant_type=password&username=${username}&password=${password}`,
     }).then((response) => {
-      if (!response.ok) {
+      if (!response.ok || response.status !== 200) {
         setLogged(false);
         const inputs = document.querySelectorAll("#login-form input");
         inputs.forEach((input) => {

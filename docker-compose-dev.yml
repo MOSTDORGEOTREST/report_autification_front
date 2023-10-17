@@ -7,7 +7,7 @@ services:
       dockerfile: 'Dockerfile-dev'
     environment:
       - REACT_APP_TEST=TEST
-      - REACT_APP_SERVER_IP=http://localhost:8555/
+      - REACT_APP_SERVER_IP=${REACT_APP_SERVER_IP}
       - DISABLE_ESLINT_PLUGIN=true npm start
     ports:
       - 9573:3000

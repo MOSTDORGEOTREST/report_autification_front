@@ -7,7 +7,7 @@ import Context from "../../context";
 import { useEffect } from "react";
 
 export default function Personal() {
-  const { logged } = useContext(Context);
+  const { logged, setLogged } = useContext(Context);
 
   const [userData, setUserData] = useState(null);
   const [reportsCount, setReportsCount] = useState(0);
@@ -43,6 +43,8 @@ export default function Personal() {
         response.json().then((data) => {
           setUserData(data);
         });
+      } else {
+        setLogged(false);
       }
     });
   };
