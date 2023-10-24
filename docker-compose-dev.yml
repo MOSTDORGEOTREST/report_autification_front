@@ -20,13 +20,13 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
   webserver:
-    image: nginx:mainline-alpine
+    image: nginx:alpine
     container_name: webserver
     restart: unless-stopped
     ports:
       - "80:80"
     volumes:
-      - ./nginx-conf:/etc/nginx/conf.d
+      - ./nginx:/etc/nginx/conf.d
     depends_on:
       - nodejs
     networks:
