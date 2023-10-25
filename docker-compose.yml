@@ -13,25 +13,16 @@ services:
     ports:
       - 8080:3000
     restart: unless-stopped
-    networks:
-      - app-network
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
-  webserver:
+  server:
     image: nginx:alpine
-    container_name: webserver
-    restart: unless-stopped
+    restart: always
     ports:
       - "80:80"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - nodejs
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    links:
+      - nodejs:nodejs
