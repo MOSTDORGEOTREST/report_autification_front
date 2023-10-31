@@ -2,31 +2,15 @@ version: '3.5'
 
 services:
   nodejs:
-    build:
-      context: './'
-      dockerfile: 'Dockerfile'
+    build: ./
     container_name: nodejs
     environment:
       - REACT_APP_TEST=TEST
-      - REACT_APP_SERVER_IP=http://89.223.65.190/
+      - REACT_APP_SERVER_IP=http://89.223.65.190:3000/
       - DISABLE_ESLINT_PLUGIN=true npm start
-    networks:
-      - app-network
+    ports:
+      - 3000:3000
     restart: unless-stopped
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-
-  server:
-    image: nginx:alpine
-    restart: always
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
