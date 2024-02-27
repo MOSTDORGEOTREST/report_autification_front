@@ -1,14 +1,17 @@
-version: '3.7'
+version: '3.5'
 
 services:
   nodejs:
-    build: ./
+    build:
+      context: './'
+      dockerfile: 'Dockerfile'
     container_name: nodejs
     environment:
-      - REACT_APP_SERVER_IP=http://localhost:8000/
+      - REACT_APP_TEST=TEST
+      - REACT_APP_SERVER_IP=http://89.223.65.190/
       - DISABLE_ESLINT_PLUGIN=true npm start
     ports:
-      - 3000:3000
+      - 8080:3000
     restart: unless-stopped
     volumes:
       - /etc/timezone:/etc/timezone:ro
