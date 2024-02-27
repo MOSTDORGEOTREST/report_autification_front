@@ -5,7 +5,7 @@ services:
     build: ./
     container_name: nodejs
     environment:
-      - REACT_APP_SERVER_IP=http://localhost/
+      - REACT_APP_SERVER_IP=http://176.57.217.229/
       - DISABLE_ESLINT_PLUGIN=true npm start
     ports:
       - 3000:3000
