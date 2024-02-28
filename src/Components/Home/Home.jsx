@@ -44,7 +44,7 @@ export default function Home() {
       });
 
     function updateReports() {
-      fetch(`${process.env.REACT_APP_SERVER_IP}reports/count`)
+      fetch(`${process.env.REACT_APP_SERVER_IP}reports/count/`)
         .then((response) => {
           if (response.ok && response.status === 200) return response.json();
           return undefined;
