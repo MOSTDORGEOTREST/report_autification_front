@@ -126,7 +126,7 @@ export default function Home() {
             <div className="home-img__hover">
               <div className="home-img__link_wrapper">
                 <a
-                  href="/report/95465771a6f399bf52cd57db2cf640f8624fd868"
+                  href="/report/4c795fb5002852b5af5df9e5de1e44b11b920d6f"
                   className="home-img__hover_link"
                 >
                   <img src={qr_index} width="100px" alt="qr_index" />
