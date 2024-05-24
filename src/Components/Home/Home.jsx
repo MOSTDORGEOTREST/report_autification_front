@@ -103,23 +103,24 @@ export default function Home() {
               </h1>
             </div>
 
-            <button
+            <a
               className="btn-test btn btn-success btn-lg w-100 w-lg-50 align-center"
               id="btn-test"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                signOut(setLogged).then(() => {
-                  login(setLogged, "trial", "trial").then(() => {
-                    whenReady().then(() => {
-                      navigate("/login", { replace: true });
-                    });
-                  });
-                });
-              }}
+              // onClick={(event) => {
+              //   event.preventDefault();
+              //   event.stopPropagation();
+              //   signOut(setLogged).then(() => {
+              //     login(setLogged, "trial", "trial").then(() => {
+              //       whenReady().then(() => {
+              //         navigate("/login", { replace: true });
+              //       });
+              //     });
+              //   });
+              // }}
+              href="/report/4c795fb5002852b5af5df9e5de1e44b11b920d6f"
             >
               Протестировать
-            </button>
+            </a>
           </div>
           <div className="home-img" id="homeImg">
             <img className="home-img__image" src={mainimg} alt="mainimg"></img>
@@ -137,8 +138,8 @@ export default function Home() {
         </div>
 
         <section className="index_content" id="about">
-          <hr />
-          <div className="content__container container-mdgt">
+          {/* <hr /> */}
+          {/* <div className="content__container container-mdgt">
             <h2 className="container__title">Описание проекта</h2>
           </div>
 
@@ -147,8 +148,8 @@ export default function Home() {
             специальном сервере, исключая ручные изменения в протоколе вне
             лаборатории.
           </p>
-
-          <br />
+          */}
+          {/* <br />  */}
 
           <div className="container-fidure">
             <div className="figure">
@@ -264,7 +265,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="index_content" id="license">
+        {/* <div className="index_content" id="license">
           <hr />
 
           <div className="mdgt-cards__wrapper">
@@ -386,7 +387,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
