@@ -267,6 +267,7 @@ ul {
 }
 
 .btn-test {
+  font-style: normal;
   border-color: var(--green_logo);
   background-color: var(--green_logo);
 }
