@@ -44,7 +44,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 2rem;
+  row-gap: 5rem;
 }
 
 .qr {
@@ -64,12 +64,16 @@
 @media screen and (max-width: 620px) {
   .index_content.home_info {
     flex-wrap: wrap;
-    row-gap: 1rem;
+    row-gap: 5rem;
     justify-content: center;
   }
 
   .index_content.home_info > div {
     max-width: 100%;
+  }
+
+  .index_content.home_info > div p {
+    text-align: left;
   }
 
   .home-img {
