@@ -84,12 +84,12 @@ export default function Footer() {
                   </h3>
                   <div className="contacts__description">
                     <a
-                      href="https://mdgt.ru"
+                      href="http://mdgt.site/"
                       target="_blank"
                       rel="noreferrer"
                       className="contacts__link"
                     >
-                      mdgt.ru
+                      mdgt.site
                     </a>
                   </div>
                 </div>
