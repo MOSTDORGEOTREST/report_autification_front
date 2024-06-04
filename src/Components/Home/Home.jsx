@@ -4,6 +4,8 @@ import "./Home.css";
 
 import Context from "../../context";
 
+import ViewsChart from "./ViewsChart";
+
 import { loadImage } from "../../Utils/loadImage";
 import { login, signOut } from "../../Utils/login";
 
@@ -17,10 +19,14 @@ import qr_transparent from "../images/qr_transparent.png";
 import IsMobile from "../../Utils/IsMobile";
 import { useNavigate } from "react-router-dom";
 import whenReady from "../../Utils/whenReady";
+import { parseViews, getViews } from "../../Utils/views";
 
 export default function Home() {
   const { setHomeLoaded, setLogged } = useContext(Context);
   const [reports, setReports] = useState(null);
+
+  const [views, setViews] = useState({ views: [], dates: [] });
+  const [chartLoaded, setChartLoaded] = useState(false);
 
   const navigate = useNavigate();
 
@@ -77,6 +83,24 @@ export default function Home() {
       }
     }
 
+    function updateViewsChart() {
+      fetch(`${process.env.REACT_APP_SERVER_IP}stat/period_count`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && Object.keys(data).length > 0) {
+            const resultData = parseViews(data);
+            setViews(resultData);
+            setChartLoaded(true);
+          }
+        });
+      // getViews().then((data) => {
+      //   const resultData = parseViews(data);
+      //   setViews(resultData);
+      //   setChartLoaded(true);
+      // });
+    }
+
+    updateViewsChart();
     updateReports();
     imageMove();
   }, [setHomeLoaded]);
@@ -264,6 +288,12 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <div className="chart-card">
+          <div className="chart-card__chart">
+            <ViewsChart dataset={views} />
+          </div>
+        </div>
 
         {/* <div className="index_content" id="license">
           <hr />
