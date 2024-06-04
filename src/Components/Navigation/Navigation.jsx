@@ -105,7 +105,7 @@ export default function Navigation() {
                       </NavHashLink>
                     </li>
 
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                       <NavHashLink
                         className="nav-link"
                         smooth
@@ -115,7 +115,7 @@ export default function Navigation() {
                       >
                         Покупка
                       </NavHashLink>
-                    </li>
+                    </li> */}
 
                     <li className="nav-item">
                       <NavHashLink

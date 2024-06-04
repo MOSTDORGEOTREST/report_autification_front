@@ -6,14 +6,13 @@ import "./Footer.css";
 import mdgt from "./mdgt.png";
 
 export default function Footer() {
-
   // load
   useEffect(() => {
     const toastItem = document.getElementById("toast");
     const toast = new Toast(toastItem);
-  
+
     // console.log(toast)
-  
+
     const toastBtnAccept = document.getElementById("btnAccept");
     toastBtnAccept.addEventListener("click", (event) => {
       setCookie("allowCookies", "1", 7);
@@ -60,79 +59,39 @@ export default function Footer() {
       <footer className="footer__container">
         <div className="container_contact" id="contact">
           <div className="container-mdgt">
-            <div className="row">
-              <div className="col-md-3 col-sm-6">
-                <h3 className="contacts__header">
-                  <i className="bi bi-house"></i> Адрес:
-                </h3>
-                <div className="contacts__description">
-                  г.&#160;Москва, ул. Искры, д. 31, корп. 1, этаж 4.
-                </div>
-                <div
-                  className="itd_play"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
-                >
-                  <p className="contacts__link_map">
-                    <i className="bi bi-geo-alt"></i> На карте
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-3 col-sm-6">
-                <div className="contacts__double-contact">
-                  <div className="">
-                    <h3 className="contacts__header">
-                      <i className="bi bi-phone"></i> Телефон:
-                    </h3>
-                    <div className="contacts__description">
-                      <a
-                        href="tel:+74956566910"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="contacts__link_tel"
-                      >
-                        8 (495) 656-69-10
-                      </a>
-                    </div>
-                  </div>
-                  <div className="">
-                    <h3 className="contacts__header">
-                      <i className="bi bi-envelope"></i> Почта:
-                    </h3>
-                    <div className="contacts__description">
-                      <a
-                        href="mailto:support@mdgt.ru"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="contacts__link"
-                      >
-                        support@mdgt.ru
-                      </a>
-                    </div>
+            <div className="row row-mdgt">
+              <div className="contacts__double-contact">
+                <div className="">
+                  <h3 className="contacts__header">
+                    <i className="bi bi-envelope"></i> Почта:
+                  </h3>
+                  <div className="contacts__description">
+                    <a
+                      href="mailto:support@mdgt.ru"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="contacts__link"
+                    >
+                      support@mdgt.ru
+                    </a>
                   </div>
                 </div>
               </div>
-
-              <div className="col-md-3 col-sm-6">
-                <h3 className="contacts__header">
-                  <i className="bi bi-clock"></i> Режим работы:
-                </h3>
-                <div className="contacts__description">Пн-Пт 10:00-18:00</div>
-              </div>
-
-              <div className="col-md-3 col-sm-6">
-                <h3 className="contacts__header">
-                  <i className="bi bi-globe"></i> Веб-сайт:
-                </h3>
-                <div className="contacts__description">
-                  <a
-                    href="https://mdgt.ru"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="contacts__link"
-                  >
-                    mdgt.ru
-                  </a>
+              <div className="contacts__double-contact">
+                <div className="">
+                  <h3 className="contacts__header">
+                    <i className="bi bi-globe"></i> Веб-сайт:
+                  </h3>
+                  <div className="contacts__description">
+                    <a
+                      href="http://mdgt.site/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="contacts__link"
+                    >
+                      mdgt.site
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -148,7 +107,9 @@ export default function Footer() {
           >
             <img className="footer__img" src={mdgt} alt="логотип МДГТ" />
           </a>
-          <span className="text-muted_mdgt">&copy; Мостдоргеотрест {new Date().getFullYear()}</span>
+          <span className="text-muted_mdgt">
+            &copy; Мостдоргеотрест {new Date().getFullYear()}
+          </span>
         </div>
 
         <div
