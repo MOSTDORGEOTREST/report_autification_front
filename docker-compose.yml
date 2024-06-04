@@ -8,7 +8,7 @@ services:
       - REACT_APP_SERVER_IP=http://176.57.217.229/
       - DISABLE_ESLINT_PLUGIN=true npm start
     ports:
-      - 80:3000
+      - 3000:3000
     restart: unless-stopped
     volumes:
       - /etc/timezone:/etc/timezone:ro
@@ -21,7 +21,6 @@ services:
       - ./cert/key.key:/etc/ssl/key.key
       - ./cert/crt.crt:/etc/ssl/crt.crt
       - ./server/conf.d:/etc/nginx/conf.d
-      - ./app:/app
     links:
       - nodejs:nodejs
     ports:
