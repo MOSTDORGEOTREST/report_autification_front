@@ -17,6 +17,7 @@ services:
   server:
     restart: always
     image: nginx
+    container_name: nginx_server
     volumes:
       - ./cert/key.key:/etc/ssl/key.key
       - ./cert/crt.crt:/etc/ssl/crt.crt
@@ -26,3 +27,5 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - nodejs
